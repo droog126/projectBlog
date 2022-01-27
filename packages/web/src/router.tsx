@@ -1,14 +1,14 @@
-import React, { lazy } from 'react'
+import React, { lazy } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Spin } from 'antd';
 import Header from '@/components/Header';
 
-
 const Home = lazy(() => import('./pages/home/index'));
 const Project = lazy(() => import('./pages/home/index'));
 const Blog = lazy(() => import('./pages/blog/index'));
+const Article = lazy(() => import('./pages/blog/article'));
 
 export const routes = [
   {
@@ -22,15 +22,27 @@ export const routes = [
     name: '项目'
   },
   {
+    path: '/blog/article',
+    Component: Article,
+    name: '文章'
+  },
+  {
     path: '/blog',
     Component: Blog,
-    name: '博客'
+    name: '博客',
+    children: [
+      {
+        path: '/blog/article',
+        Component: Article,
+        name: '文章'
+      }
+    ]
   }
-]
+];
 
 export default ({ loading = false, children }) => {
   if (loading) {
-    return <Spin size='large'></Spin>
+    return <Spin size="large"></Spin>;
   }
   return (
     <>
@@ -40,13 +52,12 @@ export default ({ loading = false, children }) => {
           <Header></Header>
           <Routes>
             {routes.map(({ path, Component, name }) => {
-              return < Route path={path} element={< Component />} key={name} />
+              return <Route path={path} element={<Component />} key={name} />;
             })}
-            <Route path="/*" element={<div>hello</div>} />
+            <Route path="*" element={<div>hello</div>} />
           </Routes>
         </BrowserRouter>
       </Suspense>
     </>
-
-  )
-}
+  );
+};
