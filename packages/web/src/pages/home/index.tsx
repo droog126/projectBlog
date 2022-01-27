@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import useGlobalHook from '@/globalState';
-import styles from './index.scss';
+import useGlobalHook from '@/requestState';
+import styles from './index.less';
 import { wrap } from 'module';
 import prouduct from '@/events/user/get/prouduct';
 import moment from 'moment';

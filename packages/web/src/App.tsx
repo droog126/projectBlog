@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import useGlobalHook from './globalState';
+import useGlobalHook from './requestState';
 
 export default ({ children }) => {
     const globalHook = useGlobalHook();
@@ -14,11 +14,12 @@ export default ({ children }) => {
     }, [connection])
 
     if (!connection) {
-        return <div>connnetion...</div>
+        return <div>connections...</div>
     }
     return (
         <div>
             {children}
+            
         </div>
     )
 }

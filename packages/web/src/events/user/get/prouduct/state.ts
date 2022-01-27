@@ -1,5 +1,5 @@
 import { createState, useState } from '@hookstate/core';
-import { useOutState as useRequestHook } from '@/globalState';
+import { useOutState as useRequestHook } from '@/requestState';
 const state = createState({ pedding: false, value: {} });
 
 const wrap = (s: any) => {

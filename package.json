@@ -14,16 +14,10 @@
   "scripts": {
     "server": "lerna exec --scope server yarn dev",
     "web": "lerna exec --scope web -- yarn dev",
-    "dev": "concurrently \"yarn server\" \"yarn web\"  ",
-    "blog": "lerna exec --scope blog yarn start",
-    "publish::common": "lerna exec --scope @ecom/nt-common  npm publish",
-    "build::common": "lerna exec --scope @ecom/nt-common yarn build",
-    "build::web": "lerna exec --scope web yarn build",
-    "build::blog": "lerna exec --scope blog yarn build",
-    "build": "concurrently \"yarn version && yarn build::common  && yarn publish::common\" \"yarn build::web\"   "
+    "dev": "concurrently \"yarn server\" \"yarn web\"  "
   },
   "version": "0.0.0",
   "dependencies": {
-    "@icon-park/react": "^1.3.5"
+  
   }
 }

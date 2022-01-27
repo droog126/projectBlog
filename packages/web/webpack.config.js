@@ -6,6 +6,7 @@ const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
 const webpack = require('webpack');
 // const autoCssModulePlugin = require('./plugins/cssAuto');
 
+
 const DEV = process.env.DEV == 'true' ? true : false;
 
 const srcPath = path.resolve(__dirname, 'src');
@@ -71,18 +72,36 @@ const config = {
         use: ['file-loader'],
       },
       {
-        test: /\.css$|\.scss$/i,
+        test: /\.less$/i,
+        exclude: [/node_modules/, path.join(srcPath, 'theme/index.less')],
         use: [
-          'style-loader',
+          "style-loader",
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
               modules: {
                 localIdentName: '[local]_[hash:5]',
               },
+            }
+          },
+          "postcss-loader",
+          'less-loader',
+        ]
+      },
+      {
+        test: /\.less$/i,
+        include: path.join(srcPath, 'theme/index.less'),
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              lessOptions: {
+                javascriptEnabled: true,
+              }
             },
           },
-          'sass-loader',
         ],
       },
       {

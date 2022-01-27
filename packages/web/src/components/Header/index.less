@@ -1,0 +1,41 @@
+.headerContainer {
+  position: relative;
+  height: 48px;
+  display: flex;
+  margin: 12px 24px;
+  .left {
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    .log {
+      font-weight: 800;
+      letter-spacing: 4px;
+    }
+    .switchIcon {
+      cursor: pointer;
+    }
+  }
+  .mid {
+    flex: 1;
+  }
+  .right {
+    width: fit-content;
+    display: flex;
+    justify-content: flex-end;
+    .header {
+      display: flex;
+
+      img {
+        width: 28px;
+        height: 28px;
+        border-radius: 100%;
+      }
+    }
+  }
+  :global {
+    .ant-select-single.ant-select-show-arrow .ant-select-selection-item,
+    .ant-select-single.ant-select-show-arrow .ant-select-selection-placeholder {
+      padding-right: 0px;
+    }
+  }
+}
