@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import styles from './index.less';
 import DefaultImg from '@/defaultImg';
 import { Dropdown, Menu, Select, Space } from 'antd';
@@ -12,7 +12,20 @@ export default () => {
   const { curType } = globalHook.get();
   const navigate = useNavigate();
   const headerDom = useRef(null);
-  console.log(navigate, 'sss');
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case '/blog':
+        globalHook.set({ curType: 'blog' });
+        break;
+      case '/project':
+        globalHook.set({ curType: 'project' });
+        break;
+      case '/blog/article':
+        globalHook.set({ curType: 'article' });
+        break;
+    }
+  }, []);
   const projectMenu = (
     <Menu>
       <Menu.Item>设置首页</Menu.Item>
@@ -21,6 +34,40 @@ export default () => {
       <Menu.Item>登出</Menu.Item>
     </Menu>
   );
+  const articleMenu = (
+    <Menu>
+      <Menu.Item>编辑文章</Menu.Item>
+      <Menu.Item>删除文章</Menu.Item>
+      <Menu.Item>删除项目</Menu.Item>
+      <Menu.Item>登出</Menu.Item>
+    </Menu>
+  );
+  const blogMenu = (
+    <Menu>
+      <Menu.Item
+        onClick={() => {
+          navigate('/article/create');
+        }}>
+        发布文章
+      </Menu.Item>
+      <Menu.Item>删除文章</Menu.Item>
+      <Menu.Item>登出</Menu.Item>
+    </Menu>
+  );
+
+  const curMenu = useMemo(() => {
+    switch (curType) {
+      case 'blog':
+        return blogMenu;
+        break;
+      case 'project':
+        return projectMenu;
+        break;
+      case 'article':
+        return articleMenu;
+        break;
+    }
+  }, [curType]);
 
   const mockData = {
     author: {
@@ -47,7 +94,7 @@ export default () => {
               strokeLinecap="butt"
             />
           </div>
-          <div className={styles.mid}></div>
+          <div className={styles.mid} />
           <div className={[styles.right, 'alignCenter'].join(' ')}>
             <div>
               <span>当前博客</span>
@@ -60,7 +107,7 @@ export default () => {
             <div className={styles.header} ref={headerDom}>
               <Dropdown
                 trigger={['click']}
-                overlay={projectMenu}
+                overlay={curMenu}
                 getPopupContainer={() => {
                   return headerDom.current;
                 }}>
