@@ -1,6 +1,6 @@
 {
 
-	// "prettier.configPath": ".prettierrc.js",
+	"prettier.configPath": "./.prettierrc.js",
 	// 保存时格式化
 	// 相当于是 vscode 保存时调用的钩子事件
 	"editor.codeActionsOnSave": {
@@ -13,7 +13,7 @@
 	//配置 ESLint 检查的文件类型
 	"eslint.validate": ["javascript", "typescript", "react", "html","typescriptreact"],
 	"eslint.options": {
-	  "configFile": "./`.eslintrc`.js"
+	  "configFile": "./.eslintrc.js"
 	},
 	
 
