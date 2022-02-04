@@ -14,6 +14,11 @@ const ArticleEdit = lazy(() => import('./pages/blog/article/edit'));
 
 export const routes = [
   {
+    path:'/',
+    Component:Home,
+    name:'首页'
+  },
+  {
     path: '/home',
     Component: Home,
     name: '首页'

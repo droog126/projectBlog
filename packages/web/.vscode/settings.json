@@ -15,7 +15,7 @@
 	"eslint.options": {
 	  "configFile": "./.eslintrc.js"
 	},
-	
+	"eslint.nodePath":"./.eslintrc.js",
 
 	  // 针对对应文件设置默认格式化插件
 	// "[javascript]": {
