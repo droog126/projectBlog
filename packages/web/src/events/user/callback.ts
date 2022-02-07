@@ -1,12 +1,11 @@
-import React from 'react';
 import { useOutState as useGlobalState } from '@/globalState';
-import { useLocation } from 'react-router-dom';
 
 export const UserLoginCallback = ({ data }, socket) => {
-  // console.log('登入成功后的回调', data);
   const { name, token } = data;
+  localStorage.setItem('token', token);
   const globalHook = useGlobalState();
-  globalHook.set({ name, token });
+  globalHook.set({ token, userInfo: data, curName: data.name });
+  globalHook.goTo('/home');
 };
 
 export const UserCreateCallback = ({ data }) => {
@@ -14,13 +13,14 @@ export const UserCreateCallback = ({ data }) => {
   const { name, token } = data;
   localStorage.setItem('token', token);
   const globalHook = useGlobalState();
-  globalHook.set({ name, token });
+  globalHook.set({ token, userInfo: data, curName: data.name });
+  globalHook.goTo('/home');
 };
 
 export const UserAutoLoginCallback = ({ data }) => {
   console.log('登入成功后的回调', data);
-  const { name, token } = data;
+  const { token } = data;
   const globalHook = useGlobalState();
-  globalHook.set({ name, token });
+  globalHook.set({ token, userInfo: data, curName: data.name });
   globalHook.goTo('/home');
 };

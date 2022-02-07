@@ -23,6 +23,7 @@
     "msgpack5": "^5.3.2",
     "redis": "^4.0.1",
     "socket.io": "^4.4.1",
+    "uid": "^2.0.0",
     "web": "^0.0.2"
   },
   "devDependencies": {

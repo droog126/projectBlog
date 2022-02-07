@@ -20,7 +20,8 @@ const devServer = {
   static: path.resolve(__dirname, './out')
 };
 
-const environmentConfig = DEV ? { WEB: JSON.stringify(true) } : {};
+
+const environmentConfig = DEV ? { DEV: JSON.stringify(true) } : { DEV: JSON.stringify(false)};
 
 const optimization = {
   splitChunks: {
@@ -56,7 +57,7 @@ const optimization = {
 };
 
 const config = {
-  mode: 'development',
+  mode: DEV ? 'development' : 'production',
   entry: {
     app: path.join(srcPath, 'index.tsx')
   },

@@ -32,7 +32,7 @@ export const routes = [
     name: '项目'
   },
   {
-    path: '/blog/article',
+    path: '/blog/article/:key',
     Component: Article,
     name: '文章'
   },
@@ -63,17 +63,19 @@ export default ({ loading = false }) => {
 
   const { token } = globalHook.get();
 
+  // 尝试自动登入
   useEffect(() => {
-    if (!token && location.pathname != '/account') {
-      globalHook.goTo('/account');
-    }
-
-    // 尝试自动登入
     const localToken = localStorage.getItem('token') || 0;
     if (localToken) {
       UserAutoLogin(localToken);
     }
   }, []);
+
+  useEffect(() => {
+    if (!token && location.pathname != '/account') {
+      globalHook.goTo('/account');
+    }
+  }, [token]);
 
   return (
     <>

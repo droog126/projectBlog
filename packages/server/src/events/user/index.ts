@@ -1,4 +1,4 @@
-import Data from "../../data/inedx";
+import Data from "@/data";
 const { encode, decode } = require("msgpack5")();
 const { setData, getData, client } = Data;
 var jwt = require("jsonwebtoken");
@@ -27,6 +27,7 @@ export const UserCreate = async (req: any, socket: any) => {
     };
     await client.json.set(_key, ".", userData);
 
+    delete userData.psw;
     const res = { code: 0, msg: "创建成功了", path, data: userData };
     socket.send(JSON.stringify(encode(res)));
   } catch (e: any) {
@@ -65,6 +66,8 @@ export const UserLogin = async (req: any, socket: any) => {
         token: userData.token,
         data: userData,
       };
+
+      delete userData.psw;
       socket.send(JSON.stringify(encode(res)));
     } else {
       delete userData.psw;
@@ -78,6 +81,8 @@ export const UserLogin = async (req: any, socket: any) => {
         token: newToken,
         data: userData,
       };
+
+      delete userData.psw;
       socket.send(JSON.stringify(encode(res)));
     }
 
@@ -107,7 +112,9 @@ export const UserAutoLogin = async (req: any, socket: any) => {
     const _key = `user:${name}`;
     isExist = await client.exists(_key);
     if (isExist) {
-      const userData = await client.json.get(_key);
+      const userData: any = await client.json.get(_key);
+
+      delete userData.psw;
       const res = { code: 0, msg: "自动登入成功!", path, data: userData };
       socket.send(JSON.stringify(encode(res)));
       return;

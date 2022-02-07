@@ -1,7 +1,7 @@
 import { createState, useState } from '@hookstate/core';
 import { encode, decode } from '@msgpack/msgpack';
 import { ConnectCallback } from '@/events/connect';
-import { ArticleCreateCallback } from '@/events/article';
+import { ArticleCreateCallback, ArticlesGetCallback } from '@/events/article';
 import { UserLoginCallback, UserCreateCallback, UserAutoLoginCallback } from '@/events/user/callback';
 import { message } from 'antd';
 
@@ -24,6 +24,11 @@ const route: any = {
   article: {
     create: {
       func: ArticleCreateCallback
+    }
+  },
+  articles: {
+    get: {
+      func: ArticlesGetCallback
     }
   }
 };

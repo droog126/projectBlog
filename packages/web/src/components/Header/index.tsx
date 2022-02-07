@@ -5,7 +5,7 @@ import { Dropdown, Menu, Select, Space } from 'antd';
 import { Back, Level, Switch } from '@icon-park/react';
 import { useNavigate } from 'react-router-dom';
 import { useComponentState as useGlobalState } from '@/globalState';
-
+import { UserLogout } from '@/events/user';
 const { Option } = Select;
 export default () => {
   const globalHook = useGlobalState();
@@ -31,7 +31,7 @@ export default () => {
       <Menu.Item>设置首页</Menu.Item>
       <Menu.Item>创建项目</Menu.Item>
       <Menu.Item>删除项目</Menu.Item>
-      <Menu.Item>登出</Menu.Item>
+      <Menu.Item onClick={UserLogout}>登出</Menu.Item>
     </Menu>
   );
   const articleMenu = (
@@ -39,19 +39,19 @@ export default () => {
       <Menu.Item>编辑文章</Menu.Item>
       <Menu.Item>删除文章</Menu.Item>
       <Menu.Item>删除项目</Menu.Item>
-      <Menu.Item>登出</Menu.Item>
+      <Menu.Item onClick={UserLogout}>登出</Menu.Item>
     </Menu>
   );
   const blogMenu = (
     <Menu>
       <Menu.Item
         onClick={() => {
-          navigate('/article/create');
+          globalHook.goTo('/article/create');
         }}>
         发布文章
       </Menu.Item>
       <Menu.Item>删除文章</Menu.Item>
-      <Menu.Item>登出</Menu.Item>
+      <Menu.Item onClick={UserLogout}>登出</Menu.Item>
     </Menu>
   );
 
@@ -85,7 +85,7 @@ export default () => {
               className={styles.switchIcon}
               onClick={() => {
                 globalHook.set({ curType: 'project' });
-                navigate('/project');
+                globalHook.goTo('/project');
               }}
               theme="two-tone"
               size="24"
@@ -138,7 +138,7 @@ export default () => {
               className={styles.switchIcon}
               onClick={() => {
                 globalHook.set({ curType: 'blog' });
-                navigate('/blog');
+                globalHook.goTo('/blog');
               }}
               theme="two-tone"
               size="24"
@@ -147,7 +147,7 @@ export default () => {
               strokeLinecap="butt"
             />
           </div>
-          <div className={styles.mid}></div>
+          <div className={styles.mid} />
           <div className={[styles.right, 'alignCenter'].join(' ')}>
             <div>
               <span>当前项目：</span>
@@ -192,7 +192,7 @@ export default () => {
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 globalHook.set({ curType: 'blog' });
-                navigate('/blog');
+                globalHook.goTo('/blog');
               }}
               size="24"
               fill={['#3f3f31', '#ce5151']}
@@ -200,7 +200,7 @@ export default () => {
               strokeLinecap="butt"
             />
           </div>
-          <div className={styles.mid}></div>
+          <div className={styles.mid} />
           <div className={[styles.right, 'alignCenter'].join(' ')}>
             <div>
               <span>当前项目：</span>

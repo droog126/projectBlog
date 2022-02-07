@@ -3,7 +3,8 @@ import { createState, useState } from '@hookstate/core';
 const state = createState({
   curType: 'project',
   token: '',
-  name: '',
+
+  curName: '',
   userInfo: {},
   routePtah: '/account'
 });
@@ -18,6 +19,14 @@ const wrap = (s) => {
     },
     goTo(pathName) {
       s.merge({ routePtah: pathName });
+    },
+    reset() {
+      s.merge({
+        token: '',
+        name: '',
+        userInfo: {},
+        routePtah: '/account'
+      });
     }
   };
 };

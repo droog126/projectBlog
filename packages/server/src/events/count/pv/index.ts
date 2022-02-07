@@ -1,4 +1,4 @@
-import Data from "@/data/inedx";
+import Data from "@/data";
 const { setData, getData } = Data;
 export default async (req: any) => {
   console.log("统计下页面的pv", req);

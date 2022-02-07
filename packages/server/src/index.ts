@@ -1,23 +1,3 @@
-// import { App } from "./uWebSockets.js/uws.js";
-// import { Server } from "socket.io";
-// const port = 9001;
-
-// const app = App();
-// const io = new Server();
-
-// io.attachApp(app);
-
-// io.on("connection", (socket) => {
-//   // ...
-//   console.log("A WebSocket connected!");
-// });
-
-// app.listen(port, (token) => {
-//   if (!token) {
-//     console.warn("port already in use");
-//   }
-// });
-
 import { App, SHARED_COMPRESSOR } from "./uWebSockets.js";
 const { decode } = require("msgpack5")();
 import { router } from "../src/wsRouter";

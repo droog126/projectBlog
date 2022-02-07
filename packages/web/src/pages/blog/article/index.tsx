@@ -1,9 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import defaultImg from '@/defaultImg';
 import styles from './index.less';
 import moment from 'moment';
-
+import { useParams } from 'react-router-dom';
+import { ArticleGet } from '@/events/article';
+import { useComponentState as useArticleState } from '@/events/article/state';
+import { useComponentState as useGlobalState } from '@/globalState';
+import { message } from 'antd';
 export default () => {
+  const globalHook = useGlobalState();
+  const { key = '' } = useParams();
+  if (!key) {
+    message.error('没有指定文章');
+    globalHook.goTo('/home');
+    return <></>;
+  }
+
+  const articleHook = useArticleState();
+  const articleState = articleHook.get();
+  useEffect(() => {
+    console.log('articleState', articleState);
+  }, [articleState]);
+
   const mockData = {
     title: 'Bevy引擎介绍',
     tags: ['游戏引擎', 'bevy'],
