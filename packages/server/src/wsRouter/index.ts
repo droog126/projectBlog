@@ -1,16 +1,21 @@
-import Login from "../events/user/login";
+import { Connect } from "../events";
 import CountPv from "../events/count/pv";
-import GetProduct from "../events/user/get/product/inedx";
+import { ArticleCreate } from "../events/article/index";
+import { UserCreate, UserLogin, UserAutoLogin } from "../events/user";
 
 const route: any = {
+  connect: {
+    func: Connect,
+  },
   user: {
     login: {
-      func: Login,
+      func: UserLogin,
     },
-    get: {
-      product: {
-        func: GetProduct,
-      },
+    autoLogin: {
+      func: UserAutoLogin,
+    },
+    create: {
+      func: UserCreate,
     },
   },
   count: {
@@ -18,7 +23,13 @@ const route: any = {
       func: CountPv,
     },
   },
+  article: {
+    create: {
+      func: ArticleCreate,
+    },
+  },
 };
+
 export const router = (data: any, socket: any) => {
   const { path } = data;
   try {

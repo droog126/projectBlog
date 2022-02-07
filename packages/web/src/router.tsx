@@ -1,9 +1,11 @@
-import React, { lazy } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import React, { lazy, useEffect } from 'react';
+import { BrowserRouter, useNavigate } from 'react-router-dom';
 import { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Spin } from 'antd';
 import Header from '@/components/Header';
+import { useComponentState as useGlobalSatte } from '@/globalState';
+import { UserAutoLogin } from '@/events/user';
 
 const Home = lazy(() => import('./pages/home/index'));
 const Project = lazy(() => import('./pages/home/index'));
@@ -11,12 +13,13 @@ const Blog = lazy(() => import('./pages/blog/index'));
 const Article = lazy(() => import('./pages/blog/article'));
 const ArticleCreate = lazy(() => import('./pages/blog/article/create'));
 const ArticleEdit = lazy(() => import('./pages/blog/article/edit'));
+const Account = lazy(() => import('./pages/account/index'));
 
 export const routes = [
   {
-    path:'/',
-    Component:Home,
-    name:'首页'
+    path: '/',
+    Component: Home,
+    name: '首页'
   },
   {
     path: '/home',
@@ -39,6 +42,11 @@ export const routes = [
     name: '博客'
   },
   {
+    path: '/account',
+    Component: Account,
+    name: '用户'
+  },
+  {
     path: '/article/create',
     Component: ArticleCreate,
     name: '创建文章'
@@ -50,16 +58,29 @@ export const routes = [
   }
 ];
 
-export default ({ loading = false, children }) => {
-  if (loading) {
-    return <Spin size="large" />;
-  }
+export default ({ loading = false }) => {
+  const globalHook = useGlobalSatte();
+  const { token, routePtah } = globalHook.get();
+  useEffect(() => {
+    if (!token && location.pathname != '/account') {
+      location.pathname = '/account';
+    }
+    // 触发自动登入
+    const localToken = localStorage.getItem('token') || 0;
+    if (localToken) {
+      UserAutoLogin(localToken);
+    }
+  }, [token]);
+
+  useEffect(() => {
+    const navigate = useNavigate();
+    navigate(routePtah);
+  }, [routePtah]);
   return (
     <>
-      {children}
-      <Suspense fallback={<span>loading...</span>}>
+      <Suspense fallback={<Spin size="large" />}>
         <BrowserRouter>
-          <Header />
+          {token && <Header />}
           <Routes>
             {routes.map(({ path, Component, name }) => {
               return <Route path={path} element={<Component />} key={name} />;

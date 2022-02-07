@@ -26,6 +26,7 @@ async function setData({
   }
   return;
 }
+
 async function getData({
   key = "root",
   path = ".",
@@ -49,5 +50,6 @@ export default (() => {
   return {
     setData,
     getData,
+    client,
   };
 })();

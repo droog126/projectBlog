@@ -7,16 +7,52 @@
 @import  'codemirror/lib/codemirror.css' ;
 @import  'codemirror/theme/bespin.css' ;
 
-@item-hover-bg: #585855;
-@text-color: #cdc99d;
-@component-background: #474744;
-@body-background: #474744;
-@font-size-base: 18px;
+@import '@/theme/color';
 
+.ant-input-affix-wrapper{
+
+}
+@link-color: #1890ff; // 链接色
+@success-color: #52c41a; // 成功色
+@warning-color: #faad14; // 警告色
+@error-color: #f5222d; // 错误色
+
+@text-color-secondary: rgba(0, 0, 0, 0.45); // 次文本色
+@disabled-color: rgba(0, 0, 0, 0.25); // 失效色
+@border-radius-base: 2px; // 组件/浮层圆角
+@border-color-base: #d9d9d9; // 边框色
+@box-shadow-base: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+  0 9px 28px 8px rgba(0, 0, 0, 0.05); // 浮层阴影
+
+
+
+  @item-hover-bg: #585855;  
+
+  @component-background: #474744;
+  @body-background: #474744;
+  @border-color-base:#b6b6b0;
+  @input-placeholder-color:#a09294;
+
+
+  @background-color-light:#cd9da5;
+  
+
+  @text-color: #cdc99d; // 主文本色
+  @heading-color:#cdc99d; // 标题色
+  @font-size-base: 18px; // 主字号
+
+
+  @primary-color: #80807b; // 全局主色  影响了输入框outline
+  @border-color-base:#474744; //设置输入框开始的颜色
+  @input-hover-border-color:#3b3637;
+
+  
 body {
   background: #474744;
   color: #cdc99d;
   font-size: 18px;
+  box-sizing: border-box;
+
 }
 .alignCenter {
   display: flex;
@@ -34,4 +70,20 @@ p {
 div {
   cursor: default;
   user-select: none;
+  box-sizing: border-box;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  color: @text1;
+  font-weight: 500;
+  box-sizing: border-box;
+}
+
+.center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

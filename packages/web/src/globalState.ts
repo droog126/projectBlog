@@ -1,7 +1,11 @@
 import { createState, useState } from '@hookstate/core';
 
 const state = createState({
-  curType: 'project'
+  curType: 'project',
+  token: '',
+  name: '',
+  userInfo: {},
+  routePtah: '/'
 });
 
 const wrap = (s) => {

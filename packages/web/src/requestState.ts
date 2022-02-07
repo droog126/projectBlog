@@ -1,20 +1,33 @@
 import { createState, useState } from '@hookstate/core';
 import { encode, decode } from '@msgpack/msgpack';
-import Login from '@/events/user/login';
-import GetProduct from '@/events/user/get/prouduct';
+import { ConnectCallback } from '@/events/connect';
+import { ArticleCreateCallback } from '@/events/article';
+import { UserLoginCallback, UserCreateCallback, UserAutoLoginCallback } from '@/events/user/callback';
+import { message } from 'antd';
 
 const route: any = {
+  connect: {
+    func: ConnectCallback
+  },
   user: {
     login: {
-      func: Login
+      func: UserLoginCallback
     },
-    get: {
-      product: {
-        func: GetProduct
-      }
+    create: {
+      func: UserCreateCallback
+    },
+    autoLogin: {
+      func: UserAutoLoginCallback
+    }
+  },
+  project: {},
+  article: {
+    create: {
+      func: ArticleCreateCallback
     }
   }
 };
+
 const eventHandler = (data: any, socket: any) => {
   const { path } = data;
   try {
@@ -23,20 +36,20 @@ const eventHandler = (data: any, socket: any) => {
     let len = paths.length;
     let i;
 
-    // console.log("入", target, paths, i);
+    // console.log('入', target, paths, i);
 
     for (i = 0; i < len; i++) {
       let cur = paths[i];
       target = target[cur];
     }
 
-    // console.log("出", target, paths, i);
+    // console.log('出', target, paths, i);
 
     if (i == len) {
       target.func(data, socket);
     }
   } catch (e) {
-    console.log('没找到路由', e);
+    console.log('没找到路由', e, data);
   }
 };
 
@@ -50,34 +63,54 @@ const wrap = (s) => {
     checkConnection(connection = true) {
       s.merge({ connection: connection });
     },
+    handleCallback({ code = 0, msg }) {
+      if (!code) {
+        if (msg) {
+          message.success(msg);
+        }
+        return 1;
+      } else {
+        if (code == 1) {
+          message.warning(msg);
+        } else {
+          message.error(msg);
+        }
+        return 0;
+      }
+    },
     async connect({ ip = 'localhost', port = '9001' }: any) {
       const socket = new WebSocket(`ws://${ip}:${port}`);
 
       socket.onopen = () => {
-        const newData = { path: '/user/login', meth: 'give', token: 'tao' };
+        const newData = { path: '/connect' };
         var buff = encode(newData);
         socket.send(buff);
       };
 
       socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        eventHandler(decode(data.data), socket);
+        const rawData = JSON.parse(event.data);
+        const data = decode(rawData.data);
+        if (this.handleCallback(data)) {
+          eventHandler(data, socket);
+        }
       };
       globalThis.socket = socket;
     },
-    give({ path = '/', data = {} }) {
+    give({ path = '/', data = {}, token = '' }) {
       const { connection } = s.value;
       if (connection) {
-        const newData = { path, meth: 'give', token: 'tao' };
+        const token = localStorage.getItem('token') || '';
+        const newData = { path, token, data };
         var buff = encode(newData);
         globalThis.socket.send(buff);
       } else {
-        console.log('还未连接!!', s.value);
+        message.warn('还未连接后端服务..');
       }
     }
   };
 };
 export const useOutState = () => wrap(state);
-export default () => {
+
+export const useComponentState = () => {
   return wrap(useState(state));
 };

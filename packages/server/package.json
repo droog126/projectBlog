@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/droog126/server_template#readme",
   "dependencies": {
+    "jsonwebtoken": "^8.5.1",
     "msgpack5": "^5.3.2",
     "redis": "^4.0.1",
     "socket.io": "^4.4.1",

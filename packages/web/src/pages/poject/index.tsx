@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import useRequestState from '@/requestState';
+import { useComponentState as useRequestState } from '@/requestState';
 import styles from './index.less';
-import { wrap } from 'module';
-import prouduct from '@/events/user/get/prouduct';
 import moment from 'moment';
 
 export default () => {
@@ -82,7 +80,7 @@ export default () => {
         <div className={styles.dayLogTitle}>开发日志</div>
         {mockData.data.map((item) => {
           return (
-          <div className={styles.dayLogContainer}>
+            <div className={styles.dayLogContainer}>
               <div className={styles.title}>{item.title}</div>
               <div>{item.content}</div>
             </div>

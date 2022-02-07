@@ -1,15 +1,13 @@
-import moment from 'moment';
 import React, { useEffect } from 'react';
-import useGlobalHook from './requestState';
+import { useComponentState as useRequestState } from './requestState';
 
-moment.locale('zh-cn');
 export default ({ children }) => {
-  const globalHook = useGlobalHook();
-  const { connection } = globalHook.get();
+  const requestHook = useRequestState();
+  const { connection } = requestHook.get();
 
   useEffect(() => {
     if (!connection) {
-      globalHook.connect({});
+      requestHook.connect({});
     }
   }, []);
   useEffect(() => {
@@ -19,5 +17,6 @@ export default ({ children }) => {
   if (!connection) {
     return <div>connections...</div>;
   }
+
   return <div>{children}</div>;
 };

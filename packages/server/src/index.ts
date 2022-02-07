@@ -36,6 +36,7 @@ app.ws("/*", {
   message: (socket, buffer, isBinary) => {
     try {
       const data = decode(buffer);
+      console.log("得到数据", data);
       router(data, socket);
       return data;
     } catch (error) {

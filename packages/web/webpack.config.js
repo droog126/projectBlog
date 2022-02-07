@@ -56,7 +56,7 @@ const optimization = {
 };
 
 const config = {
-  mode: DEV ? 'development' : 'production',
+  mode: 'development',
   entry: {
     app: path.join(srcPath, 'index.tsx')
   },
