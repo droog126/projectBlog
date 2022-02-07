@@ -6,7 +6,7 @@ import { Spin } from 'antd';
 import Header from '@/components/Header';
 import { useComponentState as useGlobalSatte } from '@/globalState';
 import { UserAutoLogin } from '@/events/user';
-
+import Spa from '@/pages/spa';
 const Home = lazy(() => import('./pages/home/index'));
 const Project = lazy(() => import('./pages/home/index'));
 const Blog = lazy(() => import('./pages/blog/index'));
@@ -60,26 +60,26 @@ export const routes = [
 
 export default ({ loading = false }) => {
   const globalHook = useGlobalSatte();
-  const { token, routePtah } = globalHook.get();
+
+  const { token } = globalHook.get();
+
   useEffect(() => {
     if (!token && location.pathname != '/account') {
-      location.pathname = '/account';
+      globalHook.goTo('/account');
     }
-    // 触发自动登入
+
+    // 尝试自动登入
     const localToken = localStorage.getItem('token') || 0;
     if (localToken) {
       UserAutoLogin(localToken);
     }
-  }, [token]);
+  }, []);
 
-  useEffect(() => {
-    const navigate = useNavigate();
-    navigate(routePtah);
-  }, [routePtah]);
   return (
     <>
       <Suspense fallback={<Spin size="large" />}>
         <BrowserRouter>
+          <Spa />
           {token && <Header />}
           <Routes>
             {routes.map(({ path, Component, name }) => {

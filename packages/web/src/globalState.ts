@@ -5,7 +5,7 @@ const state = createState({
   token: '',
   name: '',
   userInfo: {},
-  routePtah: '/'
+  routePtah: '/account'
 });
 
 const wrap = (s) => {
@@ -15,9 +15,13 @@ const wrap = (s) => {
     },
     set(data) {
       s.merge(data);
+    },
+    goTo(pathName) {
+      s.merge({ routePtah: pathName });
     }
   };
 };
+
 export const useOutState = () => wrap(state);
 export const useComponentState = () => {
   return wrap(useState(state));

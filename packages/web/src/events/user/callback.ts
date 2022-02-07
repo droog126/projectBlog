@@ -22,6 +22,5 @@ export const UserAutoLoginCallback = ({ data }) => {
   const { name, token } = data;
   const globalHook = useGlobalState();
   globalHook.set({ name, token });
-
-  history.pushState(null, null, '/home');
+  globalHook.goTo('/home');
 };
