@@ -1,4 +1,5 @@
 import { createState, useState } from '@hookstate/core';
+import { getSearch, setSearch } from './utils/url';
 
 const state = createState({
   curType: 'project',
@@ -6,7 +7,9 @@ const state = createState({
 
   curName: '',
   userInfo: {},
-  routePtah: '/account'
+  routePtah: '/account',
+
+  lastUrl: ''
 });
 
 const wrap = (s) => {
@@ -17,8 +20,10 @@ const wrap = (s) => {
     set(data) {
       s.merge(data);
     },
-    goTo(pathName) {
-      s.merge({ routePtah: pathName });
+    goTo(pathName, exeSearch = {}) {
+      const search = setSearch({ ...exeSearch, name: s.value.curName });
+      console.log('search', search);
+      s.merge({ routePtah: (pathName += location.search) });
     },
     reset() {
       s.merge({

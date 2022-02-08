@@ -1,6 +1,6 @@
 import { createState, useState } from '@hookstate/core';
 import { useOutState as useRequestHook } from '@/requestState';
-import { ArticlesGet } from './index';
+import { ArticleGet, ArticlesGet } from './index';
 const state = createState({ loading: true, articles: [], page: 1, pageSize: 20, article: {} });
 
 const wrap = (s: any) => {
@@ -11,6 +11,12 @@ const wrap = (s: any) => {
     set(data) {
       s.merge(data);
     },
+    clear() {
+      s.merge({ loading: true, articles: [], page: 1, pageSize: 20, article: {} });
+    },
+    getArticle({ key }) {
+      ArticleGet({ key });
+    },
     getArticles(params) {
       s.merge({ loading: true });
       ArticlesGet(params);
@@ -18,6 +24,12 @@ const wrap = (s: any) => {
     pushArticles(articles) {
       s.merge({
         articles,
+        loading: false
+      });
+    },
+    pushArticle(article) {
+      s.merge({
+        article,
         loading: false
       });
     }

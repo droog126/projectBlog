@@ -1,6 +1,10 @@
 import { Connect } from "../events";
 import CountPv from "../events/count/pv";
-import { ArticleCreate, ArticlesGet } from "../events/article/index";
+import {
+  ArticleCreate,
+  ArticlesGet,
+  ArticleGet,
+} from "../events/article/index";
 import { UserCreate, UserLogin, UserAutoLogin } from "../events/user";
 
 const route: any = {
@@ -26,6 +30,9 @@ const route: any = {
   article: {
     create: {
       func: ArticleCreate,
+    },
+    get: {
+      func: ArticleGet,
     },
   },
   articles: {

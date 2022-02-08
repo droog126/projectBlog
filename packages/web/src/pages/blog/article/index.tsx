@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import defaultImg from '@/defaultImg';
 import styles from './index.less';
 import moment from 'moment';
-import { useParams } from 'react-router-dom';
-import { ArticleGet } from '@/events/article';
 import { useComponentState as useArticleState } from '@/events/article/state';
 import { useComponentState as useGlobalState } from '@/globalState';
-import { message } from 'antd';
+import { message, Spin } from 'antd';
+import { getSearch } from '@/utils/url';
+import ReactMarkdown from 'react-markdown';
 export default () => {
   const globalHook = useGlobalState();
-  const { key = '' } = useParams();
+  const { key = '' } = getSearch();
   if (!key) {
     message.error('没有指定文章');
     globalHook.goTo('/home');
@@ -17,10 +17,13 @@ export default () => {
   }
 
   const articleHook = useArticleState();
-  const articleState = articleHook.get();
+  const { article, loading } = articleHook.get();
+
+  // 获取文章
   useEffect(() => {
-    console.log('articleState', articleState);
-  }, [articleState]);
+    articleHook.getArticle({ key });
+    return articleHook.clear();
+  }, []);
 
   const mockData = {
     title: 'Bevy引擎介绍',
@@ -36,16 +39,20 @@ export default () => {
       rank: 2
     }
   };
+  if (loading) {
+    return <Spin />;
+  }
   return (
     <div className={styles.articleContainer}>
-      <div className={styles.title}>{mockData.title}</div>
+      <div className={styles.title}>{article.title}</div>
       <div className={styles.authorContainer}>
         <img src={mockData.author.header} alt="" />
-        <div className={styles.authorName}>{mockData.author.name}</div>
-        <div className={styles.time}>{moment(mockData.createTime).fromNow()} </div>
+        <div className={styles.authorName}>{article.author}</div>
+        <div className={styles.time}>{moment(article.time).fromNow()} </div>
         <div className={styles.authorName}>发布</div>
       </div>
-      <div className={styles.content}>{mockData.content}</div>
+
+      <ReactMarkdown className={styles.content}>{article.content}</ReactMarkdown>
     </div>
   );
 };

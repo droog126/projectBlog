@@ -5,7 +5,9 @@ export const UserLoginCallback = ({ data }, socket) => {
   localStorage.setItem('token', token);
   const globalHook = useGlobalState();
   globalHook.set({ token, userInfo: data, curName: data.name });
-  globalHook.goTo('/home');
+
+  const redirectUrl = globalHook.get().lastUrl || '/home';
+  globalHook.goTo(redirectUrl);
 };
 
 export const UserCreateCallback = ({ data }) => {
@@ -14,7 +16,9 @@ export const UserCreateCallback = ({ data }) => {
   localStorage.setItem('token', token);
   const globalHook = useGlobalState();
   globalHook.set({ token, userInfo: data, curName: data.name });
-  globalHook.goTo('/home');
+
+  const redirectUrl = globalHook.get().lastUrl || '/home';
+  globalHook.goTo(redirectUrl);
 };
 
 export const UserAutoLoginCallback = ({ data }) => {
@@ -22,5 +26,7 @@ export const UserAutoLoginCallback = ({ data }) => {
   const { token } = data;
   const globalHook = useGlobalState();
   globalHook.set({ token, userInfo: data, curName: data.name });
-  globalHook.goTo('/home');
+
+  const redirectUrl = globalHook.get().lastUrl || '/home';
+  globalHook.goTo(redirectUrl);
 };

@@ -5,6 +5,7 @@ import { useComponentState as useGlobalState } from '@/globalState';
 import { getSearch } from '@/utils/url';
 import { Spin } from 'antd';
 import { useComponentState as useArticleState } from '@/events/article/state';
+import { setSearch } from '@/utils/url';
 export default () => {
   const globalHook = useGlobalState();
   const { name } = getSearch();
@@ -16,9 +17,9 @@ export default () => {
   const articleHook = useArticleState();
   const state = articleHook.get();
   const { loading, articles } = state;
-
   useEffect(() => {
     articleHook.getArticles({ user: name });
+    return articleHook.clear();
   }, []);
 
   if (process.env.DEV) {
@@ -41,7 +42,7 @@ export default () => {
                 className={styles.title}
                 onClick={() => {
                   globalHook.set({ curType: 'article' });
-                  globalHook.goTo('/blog/article');
+                  globalHook.goTo('/blog/article', { key: item.key });
                 }}>
                 {item.title}
               </div>

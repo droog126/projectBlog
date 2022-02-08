@@ -12,12 +12,17 @@ export const ArticleCreate = (data) => {
   requestHook.give({ path: '/article/create', data });
 };
 
-export const ArticleGet = (key) => {
+export const ArticleGet = ({ key }) => {
   const requestHook = useRequestState();
   requestHook.give({ path: '/article/get', data: { key } });
 };
 
-export const ArticleGetCallback = () => {};
+export const ArticleGetCallback = ({ data }) => {
+  console.log('文章获取返回', data);
+  const { article } = data;
+  const articleHook = useArticleState();
+  articleHook.pushArticle(article);
+};
 
 export const ArticlesGet = ({ user }) => {
   const requestHook = useRequestState();

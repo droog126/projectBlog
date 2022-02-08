@@ -54,3 +54,24 @@ export const ArticlesGet = async (req: any, socket) => {
     }
   }
 };
+
+export const ArticleGet = async (req: any, socket) => {
+  const { isValid } = await verifyUser(req, socket);
+  if (isValid) {
+    const {
+      data: { key },
+      path,
+    } = req;
+    const isExist = await client.exists(key);
+    console.log(isExist, "??", key);
+    if (isExist) {
+      const article = await client.json.get(key, ".");
+
+      const res = { code: 0, msg: "文章获取成功", path, data: { article } };
+      send(socket, res);
+    } else {
+      const res = { code: 2, msg: "文章不存在", path, data: {} };
+      send(socket, res);
+    }
+  }
+};

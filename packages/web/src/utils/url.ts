@@ -23,9 +23,10 @@ export const setSearch = (obj) => {
     let val = obj[key];
     let str = `${key}=${val}`;
     if (index < keys.length - 1) {
-      str + '&';
+      str += '&';
     }
     search += str;
   });
   history.replaceState(null, null, location.pathname + search);
+  return search;
 };

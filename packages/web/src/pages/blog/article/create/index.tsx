@@ -4,6 +4,7 @@ import { Controlled as CodeMirror } from 'react-codemirror2';
 import styles from './index.less';
 import { Button, Input, message } from 'antd';
 require('codemirror/mode/markdown/markdown');
+
 import { ArticleCreate } from '@/events/article';
 export default () => {
   const [content, setContent] = useState('## 使用最方便的博客语法吧');
@@ -35,6 +36,7 @@ export default () => {
           }}
           onChange={(editor, data, value) => {}}
         />
+
         <ReactMarkdown className={styles.right}>{content}</ReactMarkdown>
       </div>
 

@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Spin } from 'antd';
 import Header from '@/components/Header';
-import { useComponentState as useGlobalSatte } from '@/globalState';
+import { useComponentState as useGlobalState } from '@/globalState';
 import { UserAutoLogin } from '@/events/user';
 import Spa from '@/pages/spa';
 const Home = lazy(() => import('./pages/home/index'));
@@ -32,7 +32,7 @@ export const routes = [
     name: '项目'
   },
   {
-    path: '/blog/article/:key',
+    path: '/blog/article',
     Component: Article,
     name: '文章'
   },
@@ -59,7 +59,7 @@ export const routes = [
 ];
 
 export default ({ loading = false }) => {
-  const globalHook = useGlobalSatte();
+  const globalHook = useGlobalState();
 
   const { token } = globalHook.get();
 

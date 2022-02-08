@@ -5,7 +5,12 @@ import App from './App';
 // import "antd/dist/antd.variable.less";
 import '@/theme/index.less';
 import moment from 'moment';
+import { message } from 'antd';
 moment.locale('zh-cn');
+
+message.config({
+  maxCount: 2
+});
 
 const renderApp = () => {
   ReactDOM.render(
