@@ -26,6 +26,7 @@ export default () => {
   // 获取文章
   useEffect(() => {
     articleHook.getArticle({ key });
+    // 常驻bug
   }, [routePath]);
 
   const mockData = {

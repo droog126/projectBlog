@@ -1,15 +1,15 @@
 import { useOutState as useRequestState } from '@/requestState';
 import { useOutState as useGlobalState } from '@/globalState';
 import { useOutState as useArticleState } from './state';
-export const ArticleCreateCallback = ({ data }) => {
-  const { articleKey } = data;
-  const globalHook = useGlobalState();
-  globalHook.goTo(`/blog/article/${articleKey}`);
-};
 
 export const ArticleCreate = (data) => {
   const requestHook = useRequestState();
   requestHook.give({ path: '/article/create', data });
+};
+export const ArticleCreateCallback = ({ data }) => {
+  const { articleKey } = data;
+  const globalHook = useGlobalState();
+  globalHook.goTo(`/blog/article`, { key: articleKey });
 };
 
 export const ArticleGet = ({ key }) => {

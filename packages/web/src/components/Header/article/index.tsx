@@ -42,14 +42,6 @@ export default () => {
       </div>
       <div className={styles.mid} />
       <div className={[styles.right, 'alignCenter'].join(' ')}>
-        <div>
-          <span>当前项目：</span>
-          <Select defaultValue="最后一国" bordered={false} suffixIcon={null}>
-            <Option value="最后一国">最后一国</Option>
-            <Option value="项目博客">项目博客</Option>
-          </Select>
-        </div>
-
         <div className={styles.header} ref={headerDom}>
           <Dropdown
             trigger={['click']}
