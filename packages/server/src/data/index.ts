@@ -4,6 +4,10 @@ const client = createClient();
 client.connect().then(() => {
   console.log("data ok");
 });
+// client.subscribe("updateUser", (e) => {
+//   console.log("hello");
+// });
+// client.publish("updateUser", "fuck you ");
 
 async function setData({
   key = "root",
@@ -18,8 +22,8 @@ async function setData({
   console.log("setData", key, path, res);
 
   if (res) {
-    const vlaue = await client.json.get(key, { path });
-    return vlaue;
+    const value = await client.json.get(key, { path });
+    return value;
   } else {
     await client.json.set(key, path, {});
     await client.json.set(key, path, data);

@@ -1,13 +1,45 @@
 import React, { useEffect, useState } from 'react';
 import { useComponentState as useRequestState } from '@/requestState';
+import { useComponentState as useGlobalState } from '@/globalState';
+import { getSearch } from '@/utils/url';
 import styles from './index.less';
 import moment from 'moment';
+import { Button, message, Spin } from 'antd';
+import { ProjectGet } from '@/events/project';
+import { useComponentState as useProjectState } from '@/events/project/state';
+import { useComponentState as useProjectCreateModalState } from '@/components/Modal/ProjectCreateModal/state';
 
 export default () => {
-  const requestHook = useRequestState();
+  const projectCreateModalHook = useProjectCreateModalState();
+
+  const globalHook = useGlobalState();
+  const globalState = globalHook.get();
+  const { userInfo, routePath } = globalState;
+  const { firstKey } = userInfo;
+
+  const projectHook = useProjectState();
+  const projectState = projectHook.get();
+  const { project, loading } = projectState;
+  const { key = userInfo.projects[0] || '' } = getSearch();
+
   useEffect(() => {
-    requestHook.give({ path: '/user/get/product' });
+    if (!key) {
+      message.error('没有指定项目');
+      globalHook.goTo('/home');
+    }
   }, []);
+
+  useEffect(() => {
+    ProjectGet({ key });
+    return projectHook.clear();
+  }, [routePath]);
+
+  if (process.env.DEV) {
+    useEffect(() => {
+      console.log('项目数据中心', projectState);
+    }, [projectState]);
+  }
+
   const mockData = {
     productName: '最后一国',
     productDescription:
@@ -30,21 +62,44 @@ export default () => {
       { index: 1, title: '第1天', createTime: Date.now(), content: '创建了文件夹' }
     ]
   };
+
+  // if (!firstKey) {
+  //   return (
+  //     <div className="center">
+  //       <div>你还没有项目,先创建一个吧</div>
+
+  //       <Button
+  //         type="link"
+  //         onClick={() => {
+  //           projectCreateModalHook.set({ visible: true });
+  //         }}>
+  //         创建博客
+  //       </Button>
+  //     </div>
+  //   );
+  // }
+  if (loading) {
+    return (
+      <div className="center">
+        <Spin />
+      </div>
+    );
+  }
   return (
     <div className={styles.container}>
       <div className={styles.left}>
-        <div className={styles.title}>{mockData.productName}</div>
+        <div className={styles.title}>{project['名字']}</div>
         <div className={styles.productContainer}>
           <div className={styles.title}>项目介绍:</div>
-          <div>{mockData.productDescription}</div>
+          <div>{project['介绍']}</div>
         </div>
         <div className={styles.productContainer}>
           <div className={styles.title}>发布日期:</div>
-          {moment(mockData.publishDay).format('YYYY/MM/DD')}
+          {moment(project['time']).format('YYYY/MM/DD')}
         </div>
         <div className={styles.productContainer}>
           <div className={styles.title}>作者:</div>
-          <div>{mockData.author}</div>
+          <div>{project['author']}</div>
         </div>
         <div className={styles.productContainer}>
           <div className={styles.title}>平台:</div>

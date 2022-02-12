@@ -5,7 +5,13 @@ import {
   ArticlesGet,
   ArticleGet,
 } from "../events/article/index";
-import { UserCreate, UserLogin, UserAutoLogin } from "../events/user";
+import {
+  UserCreate,
+  UserLogin,
+  UserAutoLogin,
+  UserSetFirst,
+} from "@/events/user";
+import { ProjectCreate, ProjectGet, ProjectListGet } from "@/events/project";
 
 const route: any = {
   connect: {
@@ -20,6 +26,9 @@ const route: any = {
     },
     create: {
       func: UserCreate,
+    },
+    setFirst: {
+      func: UserSetFirst,
     },
   },
   count: {
@@ -38,6 +47,19 @@ const route: any = {
   articles: {
     get: {
       func: ArticlesGet,
+    },
+  },
+  project: {
+    get: {
+      func: ProjectGet,
+    },
+    create: {
+      func: ProjectCreate,
+    },
+    list: {
+      get: {
+        func: ProjectListGet,
+      },
     },
   },
 };

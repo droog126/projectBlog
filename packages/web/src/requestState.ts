@@ -2,7 +2,8 @@ import { createState, useState } from '@hookstate/core';
 import { encode, decode } from '@msgpack/msgpack';
 import { ConnectCallback } from '@/events/connect';
 import { ArticleCreateCallback, ArticleGetCallback, ArticlesGetCallback } from '@/events/article';
-import { UserLoginCallback, UserCreateCallback, UserAutoLoginCallback } from '@/events/user/callback';
+import { UserLoginCallback, UserCreateCallback, UserAutoLoginCallback, UserSetFirstCallback } from '@/events/user/callback';
+import { ProjectCreateCallback, ProjectGetCallback, ProjectListGetCallback } from '@/events/project';
 import { message } from 'antd';
 
 const route: any = {
@@ -18,9 +19,24 @@ const route: any = {
     },
     autoLogin: {
       func: UserAutoLoginCallback
+    },
+    setFirst: {
+      func: UserSetFirstCallback
     }
   },
-  project: {},
+  project: {
+    create: {
+      func: ProjectCreateCallback
+    },
+    get: {
+      func: ProjectGetCallback
+    },
+    list: {
+      get: {
+        func: ProjectListGetCallback
+      }
+    }
+  },
   article: {
     create: {
       func: ArticleCreateCallback
@@ -79,9 +95,9 @@ const wrap = (s) => {
         return 1;
       } else {
         if (code == 1) {
-          message.warning(msg);
+          msg && message.warning(msg);
         } else {
-          message.error(msg);
+          msg && message.error(msg);
         }
         return 0;
       }

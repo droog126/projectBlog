@@ -1,4 +1,5 @@
 import { createState, useState } from '@hookstate/core';
+import path from 'path/posix';
 import { getSearch, setSearch } from './utils/url';
 
 const state = createState({
@@ -7,7 +8,7 @@ const state = createState({
 
   curName: '',
   userInfo: {},
-  routePtah: '/account',
+  routePath: '/account',
 
   lastUrl: ''
 });
@@ -21,16 +22,18 @@ const wrap = (s) => {
       s.merge(data);
     },
     goTo(pathName, exeSearch = {}) {
-      const search = setSearch({ ...exeSearch, name: s.value.curName });
-      console.log('search', search);
-      s.merge({ routePtah: (pathName += location.search) });
+      console.log('goto', pathName, exeSearch, getSearch(pathName));
+      // 因为pathName 在重定向到上一次路由会带有参数 所以有问题
+      const lastSearch = getSearch(pathName);
+      const search = setSearch({ ...lastSearch, ...exeSearch, name: s.value.curName });
+      s.merge({ routePath: (pathName.split('?')[0] += search) });
     },
     reset() {
       s.merge({
         token: '',
         name: '',
         userInfo: {},
-        routePtah: '/account'
+        routePath: '/account'
       });
     }
   };

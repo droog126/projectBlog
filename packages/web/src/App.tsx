@@ -13,8 +13,10 @@ export default ({ children }) => {
     }
 
     // 重定向到登入前的url
+    console.log('设置上一次路由', location);
     globalHook.set({ lastUrl: location.pathname + location.search });
   }, []);
+
   useEffect(() => {
     console.log('连接状态变了', connection);
   }, [connection]);

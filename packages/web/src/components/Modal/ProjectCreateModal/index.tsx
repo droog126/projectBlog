@@ -1,11 +1,13 @@
 import { Button, Form, Input, Modal, Space } from 'antd';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useComponentState as useModalState } from './state';
 import styles from './index.less';
+import { useComponentState as useProjectState } from '@/events/project/state';
 export default () => {
   const modalHook = useModalState();
   const { visible } = modalHook.get();
   const [form] = Form.useForm();
+  const projectHook = useProjectState();
 
   if (!visible) {
     return null;
@@ -19,8 +21,15 @@ export default () => {
         modalHook.set({ visible: false });
       }}
       onOk={async () => {
-        const res = await form.getFieldsValue();
-        console.log(res);
+        const data = await form.getFieldsValue();
+        const more = data.ext;
+        delete data.ext;
+
+        more &&
+          more.forEach((target) => {
+            data[target.key] = target.value;
+          });
+        projectHook.createProject(data);
       }}>
       <div className={styles.container}>
         <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} labelAlign="left">

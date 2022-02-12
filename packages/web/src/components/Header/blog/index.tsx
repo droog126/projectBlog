@@ -3,19 +3,25 @@ import styles from './index.less';
 import DefaultImg from '@/defaultImg';
 import { Dropdown, Menu, Select, Space } from 'antd';
 import { Back, Level, Switch } from '@icon-park/react';
-import { useNavigate } from 'react-router-dom';
 import { useComponentState as useGlobalState } from '@/globalState';
-import { UserLogout } from '@/events/user';
+import { UserLogout, UserSetFirst } from '@/events/user';
 const { Option } = Select;
 
 export default () => {
   const globalHook = useGlobalState();
-  const { curType, userInfo } = globalHook.get();
-  const navigate = useNavigate();
+  const { curType, userInfo, curName } = globalHook.get();
   const headerDom = useRef(null);
 
   const CurMenu = (
     <Menu>
+      {curName === userInfo.name && (
+        <Menu.Item
+          onClick={() => {
+            UserSetFirst({ key: '/blog' });
+          }}>
+          设置首页
+        </Menu.Item>
+      )}
       <Menu.Item
         onClick={() => {
           globalHook.goTo('/article/create');
@@ -45,14 +51,6 @@ export default () => {
       </div>
       <div className={styles.mid} />
       <div className={[styles.right, 'alignCenter'].join(' ')}>
-        <div>
-          <span>当前项目：</span>
-          <Select defaultValue="最后一国" bordered={false} suffixIcon={null}>
-            <Option value="最后一国">最后一国</Option>
-            <Option value="项目博客">项目博客</Option>
-          </Select>
-        </div>
-
         <div className={styles.header} ref={headerDom}>
           <Dropdown
             trigger={['click']}

@@ -8,7 +8,7 @@ import { useComponentState as useGlobalState } from '@/globalState';
 import { UserAutoLogin } from '@/events/user';
 import Spa from '@/pages/spa';
 const Home = lazy(() => import('./pages/home/index'));
-const Project = lazy(() => import('./pages/home/index'));
+const Project = lazy(() => import('@/pages/project/index'));
 const Blog = lazy(() => import('./pages/blog/index'));
 const Article = lazy(() => import('./pages/blog/article'));
 const ArticleCreate = lazy(() => import('./pages/blog/article/create'));

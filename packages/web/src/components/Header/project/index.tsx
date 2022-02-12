@@ -1,23 +1,40 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './index.less';
 import DefaultImg from '@/defaultImg';
-import { Dropdown, Menu, Select, Space } from 'antd';
-import { Back, Level, Switch } from '@icon-park/react';
-import { useNavigate } from 'react-router-dom';
+import { Dropdown, Menu, Select } from 'antd';
+import { Level, Switch } from '@icon-park/react';
 import { useComponentState as useGlobalState } from '@/globalState';
 import { UserLogout } from '@/events/user';
 const { Option } = Select;
 import ProjectCreateModal from '@/components/Modal/ProjectCreateModal';
 import { useComponentState as useProjectModalState } from '@/components/Modal/ProjectCreateModal/state';
+import { useComponentState as useProjectState } from '@/events/project/state';
+import { UserSetFirst } from '@/events/user';
+import { getSearch } from '@/utils/url';
 export default () => {
   const globalHook = useGlobalState();
-  const projectModalHook = useProjectModalState();
-  const { userInfo } = globalHook.get();
-  const headerDom = useRef(null);
+  const { userInfo, curName } = globalHook.get();
 
+  const projectHook = useProjectState();
+  const { projectList, project } = projectHook.get();
+
+  const headerDom = useRef(null);
+  const projectModalHook = useProjectModalState();
+
+  useEffect(() => {
+    projectHook.getProjectList({ key: curName });
+  }, []);
   const CurMenu = (
     <Menu>
-      <Menu.Item>设置首页</Menu.Item>
+      {curName === userInfo.name && (
+        <Menu.Item
+          onClick={() => {
+            const { key } = getSearch();
+            UserSetFirst({ key });
+          }}>
+          设置首页
+        </Menu.Item>
+      )}
       <Menu.Item
         onClick={() => {
           projectModalHook.set({ visible: true });
@@ -50,9 +67,21 @@ export default () => {
       <div className={[styles.right, 'alignCenter'].join(' ')}>
         <div>
           <span>当前项目：</span>
-          <Select defaultValue="最后一国" bordered={false} suffixIcon={null}>
-            <Option value="最后一国">最后一国</Option>
-            <Option value="项目博客">项目博客</Option>
+          <Select
+            style={{ width: 90 }}
+            value={project.key}
+            bordered={false}
+            suffixIcon={null}
+            onChange={(val) => {
+              globalHook.goTo('/project', { key: val });
+            }}>
+            {projectList.map((item) => {
+              return (
+                <Option value={item.key} key={item.key}>
+                  {item.name}
+                </Option>
+              );
+            })}
           </Select>
         </div>
 

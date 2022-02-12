@@ -14,8 +14,6 @@ import ArticleHeader from './article';
 export default () => {
   const globalHook = useGlobalState();
   const { curType } = globalHook.get();
-  const navigate = useNavigate();
-  const headerDom = useRef(null);
 
   useEffect(() => {
     switch (location.pathname) {

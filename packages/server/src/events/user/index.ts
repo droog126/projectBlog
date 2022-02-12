@@ -1,4 +1,6 @@
 import Data from "@/data";
+import { verifyUser, send } from "@/utils";
+import { uid } from "uid";
 const { encode, decode } = require("msgpack5")();
 const { setData, getData, client } = Data;
 var jwt = require("jsonwebtoken");
@@ -23,7 +25,8 @@ export const UserCreate = async (req: any, socket: any) => {
       psw,
       token,
       articles: [],
-      project: [],
+      projects: [],
+      firstKey: "",
     };
     await client.json.set(_key, ".", userData);
 
@@ -127,5 +130,28 @@ export const UserAutoLogin = async (req: any, socket: any) => {
     const res = { code: 2, msg: "token无效!", path };
     socket.send(JSON.stringify(encode(res)));
     return;
+  }
+};
+
+export const UserSetFirst = async (req: any, socket: any) => {
+  const { isValid, userKey, name } = await verifyUser(req, socket);
+  if (isValid) {
+    const {
+      data: { key },
+      path,
+    } = req;
+    try {
+      await client.json.set(userKey, ".firstKey", key);
+
+      const res = {
+        code: 0,
+        msg: "设置首页成功",
+        path,
+        data: { firstKey: key },
+      };
+      socket.send(JSON.stringify(encode(res)));
+    } catch (error) {
+      console.log("userSetFirst", error);
+    }
   }
 };

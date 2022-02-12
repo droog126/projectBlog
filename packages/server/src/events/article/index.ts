@@ -70,7 +70,8 @@ export const ArticleGet = async (req: any, socket) => {
       const res = { code: 0, msg: "文章获取成功", path, data: { article } };
       send(socket, res);
     } else {
-      const res = { code: 2, msg: "文章不存在", path, data: {} };
+      // 常驻bug
+      const res = { code: 2, msg: "", path, data: {} };
       send(socket, res);
     }
   }

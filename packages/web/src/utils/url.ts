@@ -1,10 +1,14 @@
-export const getSearch = (): any => {
-  if (!location.search) {
+export const getSearch = (target = ''): any => {
+  if (!location.search && !target) {
     return {};
   }
 
-  let target = location.search.split('?')[1];
-  let params = target.split('&');
+  if (!target) {
+    target = location.search.split('?')[1];
+  } else {
+    target = target.split('?')[1];
+  }
+  let params = target ? target.split('&') : [];
   let obj = {};
   let len = params.length;
   for (let i = 0; i < len; i++) {

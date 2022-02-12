@@ -9,21 +9,24 @@ import { getSearch } from '@/utils/url';
 import ReactMarkdown from 'react-markdown';
 export default () => {
   const globalHook = useGlobalState();
+  const { routePath } = globalHook.get();
   const { key = '' } = getSearch();
-  if (!key) {
-    message.error('没有指定文章');
-    globalHook.goTo('/home');
-    return <></>;
-  }
 
   const articleHook = useArticleState();
   const { article, loading } = articleHook.get();
 
+  useEffect(() => {
+    if (!key) {
+      message.error('没有指定文章');
+      globalHook.goTo('/home');
+    }
+    return articleHook.clear();
+  }, []);
+
   // 获取文章
   useEffect(() => {
     articleHook.getArticle({ key });
-    return articleHook.clear();
-  }, []);
+  }, [routePath]);
 
   const mockData = {
     title: 'Bevy引擎介绍',
