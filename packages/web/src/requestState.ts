@@ -75,7 +75,14 @@ const eventHandler = (data: any, socket: any) => {
     // console.log('出', target, paths, i);
 
     if (i == len) {
-      target.func(data, socket);
+      const res = target.func(data, socket);
+      if (globalThis.apiMap[path]) {
+        // console.log(path, '回调了', res, globalThis.apiMap);
+        globalThis.apiMap[path].forEach((rsv) => {
+          rsv(res);
+        });
+        delete globalThis.apiMap[path];
+      }
     }
   } catch (e) {
     console.log('没找到路由', e, data);
@@ -125,13 +132,28 @@ const wrap = (s) => {
       };
       globalThis.socket = socket;
     },
-    give({ path = '/', data = {}, token = '' }) {
+    async give({ path = '/', data = {}, token = '' }): Promise<any> {
       const { connection } = s.value;
       if (connection) {
         const token = localStorage.getItem('token') || '';
         const newData = { path, token, data };
         var buff = encode(newData);
         globalThis.socket.send(buff);
+
+        return new Promise((rsv, rjc) => {
+          if (globalThis.apiMap[path]) {
+            globalThis.apiMap[path].push((data) => {
+              rsv(data);
+            });
+          } else {
+            console.log('warning:有重复请求', path);
+            globalThis.apiMap[path] = [
+              (data) => {
+                rsv(data);
+              }
+            ];
+          }
+        });
       } else {
         message.warn('还未连接后端服务..');
       }

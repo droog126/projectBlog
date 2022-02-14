@@ -12,6 +12,8 @@ message.config({
   maxCount: 2
 });
 
+globalThis.apiMap = {};
+
 const renderApp = () => {
   ReactDOM.render(
     <React.StrictMode>

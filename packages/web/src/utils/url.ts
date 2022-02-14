@@ -12,7 +12,7 @@ export const getSearch = (target = ''): any => {
   let obj = {};
   let len = params.length;
   for (let i = 0; i < len; i++) {
-    let cur = params[0];
+    let cur = params[i];
     let key = cur.split('=')[0];
     let val = cur.split('=')[1];
     obj[key] = val;

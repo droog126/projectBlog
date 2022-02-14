@@ -22,7 +22,7 @@ export default () => {
   const projectModalHook = useProjectModalState();
 
   useEffect(() => {
-    projectHook.getProjectList({ key: curName });
+    projectHook.tryGetProjectList({ userName: curName });
   }, []);
   const CurMenu = (
     <Menu>

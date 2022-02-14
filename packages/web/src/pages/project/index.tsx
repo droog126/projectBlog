@@ -23,23 +23,25 @@ export default () => {
   const projectHook = useProjectState();
   const projectState = projectHook.get();
   const { project, loading } = projectState;
-  const { key = userInfo.projects[0] || '' } = getSearch();
+  const { key = userInfo.projects[0] || firstKey || '' } = getSearch();
 
   const JobCreateModalHook = useJobCreateModalState();
   useEffect(() => {
-    if (!key) {
+    if (key.includes('project')) {
+      globalHook.goTo('/project', { key });
+    } else {
       message.error('没有指定项目');
     }
   }, []);
 
   useEffect(() => {
-    ProjectGet({ key });
+    ProjectGet({ projectKey: key });
     return projectHook.clear();
   }, [routePath]);
 
   if (process.env.DEV) {
     useEffect(() => {
-      console.log('项目数据中心', projectState);
+      // console.log('项目数据中心', projectState);
     }, [projectState]);
   }
 

@@ -22,7 +22,7 @@ const wrap = (s) => {
       s.merge(data);
     },
     goTo(pathName, exeSearch = {}) {
-      console.log('goto', pathName, exeSearch, getSearch(pathName));
+      // console.log('goto', pathName, exeSearch, getSearch(pathName));
       // 因为pathName 在重定向到上一次路由会带有参数 所以有问题
       const lastSearch = getSearch(pathName);
       const search = setSearch({ ...lastSearch, ...exeSearch, name: s.value.curName });
@@ -43,3 +43,5 @@ export const useOutState = () => wrap(state);
 export const useComponentState = () => {
   return wrap(useState(state));
 };
+
+export const tryPromise = () => {};

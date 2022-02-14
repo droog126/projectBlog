@@ -29,7 +29,7 @@ export default () => {
           more.forEach((target) => {
             data[target.key] = target.value;
           });
-        projectHook.createProject(data);
+        projectHook.tryCreateProject(data);
       }}>
       <div className={styles.container}>
         <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} labelAlign="left">

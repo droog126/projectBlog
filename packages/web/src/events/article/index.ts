@@ -2,9 +2,9 @@ import { useOutState as useRequestState } from '@/requestState';
 import { useOutState as useGlobalState } from '@/globalState';
 import { useOutState as useArticleState } from './state';
 
-export const ArticleCreate = (data) => {
+export const ArticleCreate = async (data) => {
   const requestHook = useRequestState();
-  requestHook.give({ path: '/article/create', data });
+  return requestHook.give({ path: '/article/create', data });
 };
 export const ArticleCreateCallback = ({ data }) => {
   const { articleKey } = data;
@@ -12,9 +12,9 @@ export const ArticleCreateCallback = ({ data }) => {
   globalHook.goTo(`/blog/article`, { key: articleKey });
 };
 
-export const ArticleGet = ({ key }) => {
+export const ArticleGet = async ({ key }) => {
   const requestHook = useRequestState();
-  requestHook.give({ path: '/article/get', data: { key } });
+  return requestHook.give({ path: '/article/get', data: { key } });
 };
 
 export const ArticleGetCallback = ({ data }) => {
@@ -24,9 +24,9 @@ export const ArticleGetCallback = ({ data }) => {
   articleHook.pushArticle(article);
 };
 
-export const ArticlesGet = ({ user }) => {
+export const ArticlesGet = async ({ user }) => {
   const requestHook = useRequestState();
-  requestHook.give({ path: '/articles/get', data: { user } });
+  return requestHook.give({ path: '/articles/get', data: { user } });
 };
 
 export const ArticlesGetCallback = ({ data }) => {
