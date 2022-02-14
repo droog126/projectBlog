@@ -12,9 +12,9 @@ const wrap = (s: any) => {
     set(data) {
       s.merge(data);
     },
-    addJob(data) {
+    async tryAddJob(data) {
       const { key } = getSearch();
-      ProjectAddJob({ ...data, key });
+      await ProjectAddJob({ ...data, key });
     }
   };
 };

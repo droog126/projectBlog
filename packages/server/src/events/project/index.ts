@@ -12,6 +12,7 @@ export const ProjectCreate = async (req: any, socket) => {
     data.time = Date.now();
     data.key = projectKey;
     data.author = name;
+    data.jobs = [];
     try {
       await client.json.set(projectKey, ".", data);
       await client.json.arrInsert(userKey, ".projects", 0, projectKey);
@@ -40,6 +41,9 @@ export const ProjectGet = async (req: any, socket) => {
       } catch (e) {
         console.log("文章获取失败", e);
       }
+    } else {
+      const res = { code: 2, msg: "没有这个项目" };
+      send(socket, res);
     }
   }
 };
@@ -93,7 +97,10 @@ export const ProjectAddJob = async (req: any, socket) => {
           content,
           time: Date.now(),
         });
-      } catch (error) {}
+        console.log(result);
+      } catch (error) {
+        console.log("添加任务发生", error);
+      }
     }
     console.log("项目添加任务", data);
   }

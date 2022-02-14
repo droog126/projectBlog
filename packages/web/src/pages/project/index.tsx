@@ -35,7 +35,9 @@ export default () => {
   }, []);
 
   useEffect(() => {
-    ProjectGet({ projectKey: key });
+    if (key) {
+      projectHook.tryGetProject({ projectKey: key });
+    }
     return projectHook.clear();
   }, [routePath]);
 

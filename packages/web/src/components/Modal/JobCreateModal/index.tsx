@@ -23,7 +23,7 @@ export default ({}) => {
       }}
       onOk={async () => {
         const data = await form.getFieldsValue();
-        modalHook.addJob(data);
+        modalHook.tryAddJob(data);
       }}>
       <div className={styles.container}>
         <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} labelAlign="left">
