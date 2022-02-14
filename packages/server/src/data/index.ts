@@ -41,12 +41,12 @@ async function getData({
   const res = await client.exists(key, path);
   console.log("getData", key, path, res);
   if (res) {
-    const vlaue = await client.json.get(key, { path });
-    return vlaue;
+    const value = await client.json.get(key, { path });
+    return value;
   } else {
     await client.json.set(key, path, {});
-    const vlaue = await client.json.get(key, { path });
-    return vlaue;
+    const value = await client.json.get(key, { path });
+    return value;
   }
 }
 

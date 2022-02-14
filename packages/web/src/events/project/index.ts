@@ -42,3 +42,14 @@ export const ProjectListGetCallback = ({ data }) => {
   const projectHook = useProjectState();
   projectHook.set({ projectList: data });
 };
+
+export const ProjectAddJob = (data) => {
+  const requestHook = useRequestState();
+  requestHook.give({ path: '/project/job/add', data });
+};
+
+export const ProjectAddJobCallback = ({ data }) => {
+  // console.log('项目列表获取', data);
+  const projectHook = useProjectState();
+  projectHook.set({ projectList: data });
+};

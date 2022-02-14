@@ -6,6 +6,7 @@ export default () => {
   const globalState = globalHook.get();
   const { userInfo } = globalState;
   const { firstKey } = userInfo;
+
   useEffect(() => {
     if (firstKey) {
       if (firstKey.includes('project')) {
@@ -22,6 +23,7 @@ export default () => {
       }
     }
   }, []);
+
   if (!firstKey) {
     return <div>你没有设置首页</div>;
   }

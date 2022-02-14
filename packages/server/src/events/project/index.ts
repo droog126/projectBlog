@@ -58,8 +58,10 @@ export const ProjectListGet = async (req: any, socket) => {
       const projectKeys = (await client.json.get(userKey, {
         path: ".projects",
       })) as string[];
-
-      const projectList = await client.json.mGet(projectKeys, ".");
+      let projectList: any = [];
+      if (projectKeys.length) {
+        projectList = await client.json.mGet(projectKeys, ".");
+      }
       console.log("here", projectList);
       const minList = projectList.map((item: any) => {
         return { name: item["名字"], key: item.key };
@@ -76,5 +78,23 @@ export const ProjectListGet = async (req: any, socket) => {
         console.log("文章获取失败", e);
       }
     }
+  }
+};
+
+export const ProjectAddJob = async (req: any, socket) => {
+  const { isValid } = await verifyUser(req, socket);
+  if (isValid) {
+    const { path, data } = req;
+    const { key: projectKey, content } = data;
+    const isExist = await client.exists(projectKey);
+    if (isExist) {
+      try {
+        const result = await client.json.arrInsert(projectKey, ".jobs", 0, {
+          content,
+          time: Date.now(),
+        });
+      } catch (error) {}
+    }
+    console.log("项目添加任务", data);
   }
 };

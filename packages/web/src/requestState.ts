@@ -3,7 +3,7 @@ import { encode, decode } from '@msgpack/msgpack';
 import { ConnectCallback } from '@/events/connect';
 import { ArticleCreateCallback, ArticleGetCallback, ArticlesGetCallback } from '@/events/article';
 import { UserLoginCallback, UserCreateCallback, UserAutoLoginCallback, UserSetFirstCallback } from '@/events/user/callback';
-import { ProjectCreateCallback, ProjectGetCallback, ProjectListGetCallback } from '@/events/project';
+import { ProjectAddJobCallback, ProjectCreateCallback, ProjectGetCallback, ProjectListGetCallback } from '@/events/project';
 import { message } from 'antd';
 
 const route: any = {
@@ -34,6 +34,11 @@ const route: any = {
     list: {
       get: {
         func: ProjectListGetCallback
+      }
+    },
+    job: {
+      add: {
+        func: ProjectAddJobCallback
       }
     }
   },

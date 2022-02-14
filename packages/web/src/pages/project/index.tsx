@@ -8,6 +8,9 @@ import { Button, message, Spin } from 'antd';
 import { ProjectGet } from '@/events/project';
 import { useComponentState as useProjectState } from '@/events/project/state';
 import { useComponentState as useProjectCreateModalState } from '@/components/Modal/ProjectCreateModal/state';
+import { Add, EditTwo } from '@icon-park/react';
+import JobCreateModal from '@/components/Modal/JobCreateModal';
+import { useComponentState as useJobCreateModalState } from '@/components/Modal/JobCreateModal/state';
 
 export default () => {
   const projectCreateModalHook = useProjectCreateModalState();
@@ -22,10 +25,10 @@ export default () => {
   const { project, loading } = projectState;
   const { key = userInfo.projects[0] || '' } = getSearch();
 
+  const JobCreateModalHook = useJobCreateModalState();
   useEffect(() => {
     if (!key) {
       message.error('没有指定项目');
-      globalHook.goTo('/home');
     }
   }, []);
 
@@ -63,21 +66,21 @@ export default () => {
     ]
   };
 
-  // if (!firstKey) {
-  //   return (
-  //     <div className="center">
-  //       <div>你还没有项目,先创建一个吧</div>
+  if (!key) {
+    return (
+      <div className="center">
+        <div>你还没有项目,先创建一个吧</div>
 
-  //       <Button
-  //         type="link"
-  //         onClick={() => {
-  //           projectCreateModalHook.set({ visible: true });
-  //         }}>
-  //         创建博客
-  //       </Button>
-  //     </div>
-  //   );
-  // }
+        <Button
+          type="link"
+          onClick={() => {
+            projectCreateModalHook.set({ visible: true });
+          }}>
+          创建博客
+        </Button>
+      </div>
+    );
+  }
   if (loading) {
     return (
       <div className="center">
@@ -132,16 +135,31 @@ export default () => {
         </div>
       </div>
       <div className={styles.right}>
-        <div className={styles.dayLogTitle}>开发日志</div>
+        <div className={styles.dayLogTitle} style={{ display: 'flex', alignItems: 'center', gap: '0 12px' }}>
+          开发日志
+          <Add
+            onClick={() => {
+              JobCreateModalHook.set({ visible: true });
+            }}
+            theme="two-tone"
+            size="36"
+            fill={['#333', '#ce5151']}
+            style={{ cursor: 'pointer', paddingTop: '6px' }}
+          />
+        </div>
         {mockData.data.map((item) => {
           return (
             <div className={styles.dayLogContainer}>
-              <div className={styles.title}>{item.title}</div>
+              <div className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '0 12px' }}>
+                {item.title}
+                <EditTwo style={{ cursor: 'pointer', paddingTop: '4px' }} theme="two-tone" size="24" fill={['#333', '#ce5151']} />
+              </div>
               <div>{item.content}</div>
             </div>
           );
         })}
       </div>
+      <JobCreateModal />
     </div>
   );
 };

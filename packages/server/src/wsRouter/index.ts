@@ -11,7 +11,12 @@ import {
   UserAutoLogin,
   UserSetFirst,
 } from "@/events/user";
-import { ProjectCreate, ProjectGet, ProjectListGet } from "@/events/project";
+import {
+  ProjectAddJob,
+  ProjectCreate,
+  ProjectGet,
+  ProjectListGet,
+} from "@/events/project";
 
 const route: any = {
   connect: {
@@ -59,6 +64,11 @@ const route: any = {
     list: {
       get: {
         func: ProjectListGet,
+      },
+    },
+    job: {
+      add: {
+        func: ProjectAddJob,
       },
     },
   },
