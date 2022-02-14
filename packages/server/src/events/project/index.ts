@@ -27,12 +27,12 @@ export const ProjectGet = async (req: any, socket) => {
   const { isValid } = await verifyUser(req, socket);
   if (isValid) {
     const {
-      data: { key },
+      data: { projectKey },
       path,
     } = req;
-    const isExist = await client.exists(key);
+    const isExist = await client.exists(projectKey);
     if (isExist) {
-      const project = await client.json.get(key, ".");
+      const project = await client.json.get(projectKey, ".");
 
       try {
         const res = { code: 0, msg: "项目获取成功", path, data: { project } };
@@ -48,10 +48,10 @@ export const ProjectListGet = async (req: any, socket) => {
   const { isValid } = await verifyUser(req, socket);
   if (isValid) {
     const {
-      data: { key },
+      data: { userName },
       path,
     } = req;
-    const userKey = `user:${key}`;
+    const userKey = `user:${userName}`;
     const isExist = await client.exists(userKey);
     console.log("fuck", isExist, userKey);
     if (isExist) {
