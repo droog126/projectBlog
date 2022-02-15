@@ -22,7 +22,7 @@ export default () => {
 
   const projectHook = useProjectState();
   const projectState = projectHook.get();
-  const { project, loading } = projectState;
+  const { project, loading, jobsIsLoading, jobs, jobsTotal } = projectState;
   const { key = userInfo.projects[0] || firstKey || '' } = getSearch();
 
   const JobCreateModalHook = useJobCreateModalState();
@@ -36,6 +36,7 @@ export default () => {
   useEffect(() => {
     if (key) {
       projectHook.tryGetProject({ projectKey: key });
+      projectHook.tryGetProjectJobs({ projectKey: key });
     }
     return projectHook.clear();
   }, [routePath]);
@@ -150,17 +151,32 @@ export default () => {
             style={{ cursor: 'pointer', paddingTop: '6px' }}
           />
         </div>
-        {mockData.data.map((item) => {
-          return (
-            <div className={styles.dayLogContainer}>
-              <div className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '0 12px' }}>
-                {item.title}
-                <EditTwo style={{ cursor: 'pointer', paddingTop: '4px' }} theme="two-tone" size="24" fill={['#333', '#ce5151']} />
+        {jobsIsLoading ? (
+          <Spin />
+        ) : (
+          jobs.map((item, index) => {
+            return (
+              <div className={styles.dayLogContainer}>
+                <div className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '0 12px' }}>
+                  第{jobsTotal - index}天
+                  <EditTwo style={{ cursor: 'pointer', paddingTop: '4px' }} theme="two-tone" size="24" fill={['#333', '#ce5151']} />
+                </div>
+                <div>{item.content}</div>
               </div>
-              <div>{item.content}</div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
+        {jobsIsLoading ? null : (
+          <div>
+            <Button
+              type="text"
+              onClick={() => {
+                projectHook.tryGetProjectJobs({ projectKey: key });
+              }}>
+              获取更多记录
+            </Button>
+          </div>
+        )}
       </div>
       <JobCreateModal />
     </div>

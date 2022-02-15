@@ -54,14 +54,22 @@ export const ProjectListGetCallback = ({ data }) => {
   return data;
 };
 
-export const ProjectAddJob = async (data) => {
+export const ProjectJobAdd = async (data) => {
   const requestHook = useRequestState();
   return requestHook.give({ path: '/project/job/add', data });
 };
 
-export const ProjectAddJobCallback = ({ data }) => {
-  // console.log('项目列表获取', data);
-  const projectHook = useProjectState();
-  projectHook.set({ projectList: data });
+export const ProjectJobAddCallback = ({ data }) => {
+  console.log('项目任务添加成功', data);
+  return data;
+};
+
+export const ProjectJobsGet = async (data) => {
+  const requestHook = useRequestState();
+  return requestHook.give({ path: '/project/job/get', data });
+};
+
+export const ProjectJobsGetCallback = ({ data }) => {
+  console.log('获取项目记录', data);
   return data;
 };

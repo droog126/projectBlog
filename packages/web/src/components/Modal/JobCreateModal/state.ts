@@ -1,5 +1,5 @@
 import { createState, useState } from '@hookstate/core';
-import { ProjectAddJob } from '@/events/project';
+import { ProjectJobAdd } from '@/events/project';
 import { getSearch } from '@/utils/url';
 
 const state = createState({ visible: false });
@@ -14,7 +14,7 @@ const wrap = (s: any) => {
     },
     async tryAddJob(data) {
       const { key } = getSearch();
-      await ProjectAddJob({ ...data, key });
+      await ProjectJobAdd({ ...data, key });
     }
   };
 };
