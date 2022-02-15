@@ -21,6 +21,9 @@ export default () => {
         globalHook.set({ curType: 'blog' });
         globalHook.goTo('/blog');
       }
+    } else {
+      globalHook.set({ curType: 'project' });
+      globalHook.goTo('/project');
     }
   }, []);
 

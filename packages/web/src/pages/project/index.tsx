@@ -29,9 +29,8 @@ export default () => {
   useEffect(() => {
     if (key.includes('project')) {
       globalHook.goTo('/project', { key });
-    } else {
-      message.error('没有指定项目');
     }
+    // message.error('没有指定项目');
   }, []);
 
   useEffect(() => {
