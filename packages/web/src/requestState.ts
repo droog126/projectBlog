@@ -8,7 +8,8 @@ import {
   ProjectCreateCallback,
   ProjectGetCallback,
   ProjectListGetCallback,
-  ProjectJobsGetCallback
+  ProjectJobsGetCallback,
+  ProjectJobEditCallback
 } from '@/events/project';
 import { message } from 'antd';
 
@@ -48,6 +49,9 @@ const route: any = {
       },
       get: {
         func: ProjectJobsGetCallback
+      },
+      edit: {
+        func: ProjectJobEditCallback
       }
     }
   },

@@ -2,6 +2,9 @@ import { createState, useState } from '@hookstate/core';
 import { useOutState as useRequestHook } from '@/requestState';
 import { ProjectCreate, ProjectGet, ProjectListGet, ProjectJobsGet } from './index';
 import { getSearch } from '@/utils/url';
+import { useOutState as useJobEditModalState } from '@/components/Modal/JobEditModal/state';
+import { useOutState as useJobAddModalState } from '@/components/Modal/JobCreateModal/state';
+
 const state = createState({ loading: true, projects: [], project: {}, projectList: [], jobs: [], jobsIsLoading: true, jobTotal: 0 });
 
 const wrap = (s: any) => {
@@ -41,9 +44,16 @@ const wrap = (s: any) => {
       const { jobs } = this.get();
       const jobsIndex = jobs.length;
       const { total, arr } = await ProjectJobsGet({ projectKey, jobsIndex });
-      // const newJobs = [...jobs, ...arr];
-      // console.log('bug了', newJobs);
-      s.merge({ jobsIsLoading: false, jobsTotal: total, jobs: arr });
+      const newJobs = [...JSON.parse(JSON.stringify(jobs)), ...arr];
+      s.merge({ jobsIsLoading: false, jobsTotal: total, jobs: newJobs });
+    },
+    async tryEditProjectJob({ content, jobIndex }) {
+      const jobEditModalHook = useJobEditModalState();
+      jobEditModalHook.tryEditJob({ content, jobIndex });
+    },
+    async tryAddProjectJob() {
+      const jobAddModalHook = useJobAddModalState();
+      jobAddModalHook.tryAddJob();
     }
   };
 };

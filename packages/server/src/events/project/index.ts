@@ -126,13 +126,13 @@ export const ProjectAddJob = async (req: any, socket) => {
   const { isValid } = await verifyUser(req, socket);
   if (isValid) {
     const { path, data } = req;
-    const { key: projectKey, content, index = 0 } = data;
-    const isExist = await client.exists(projectKey);
+    const { projectKey, content, index = 0 } = data;
+    const jobsKey = `${projectKey}:jobs`;
+
+    const isExist = await client.exists(jobsKey);
+
     if (isExist) {
       try {
-        // 先对比最新再看是否ok
-        const jobsKey = `${projectKey}:jobs`;
-
         await client.json.arrInsert(jobsKey, ".", 0, {
           content,
           time: Date.now(),
@@ -145,7 +145,7 @@ export const ProjectAddJob = async (req: any, socket) => {
         const isSameDay =
           new Date(firstJob.time).toDateString() === new Date().toDateString();
 
-        if (!isSameDay) {
+        if (isSameDay) {
           const res = { code: 1, msg: "一天只能记一次", path };
           send(socket, res);
           return;
@@ -183,6 +183,60 @@ export const ProjectAddJob = async (req: any, socket) => {
         };
         send(socket, res);
       }
+    }
+  }
+};
+
+export const ProjectJobEdit = async (req: any, socket) => {
+  const { isValid } = await verifyUser(req, socket);
+  if (isValid) {
+    const { path, data } = req;
+    try {
+      console.log("任务编辑", data);
+      const { projectKey, jobIndex, content } = data;
+      const jobsKey = `${projectKey}:jobs`;
+      const isExist = await client.exists(jobsKey);
+      if (isExist) {
+        await client.json.set(jobsKey, `.[${jobIndex}].content`, content);
+        const jobLen = await client.json.arrLen(jobsKey, ".");
+        const jobList: any[] = [];
+        const index = 0;
+        for (let i = index; i < jobLen; i++) {
+          if (i == index + 10) {
+            break;
+          }
+          let curJob = await client.json.get(jobsKey, {
+            path: `.[${i}]`,
+          });
+          jobList.push(curJob);
+        }
+
+        const res = {
+          code: 0,
+          msg: "记录编辑成功",
+          path,
+          data: {
+            total: jobLen,
+            jobs: jobList,
+          },
+        };
+        send(socket, res);
+      } else {
+        const res = {
+          code: 2,
+          msg: "记录不存在",
+          path,
+        };
+        send(socket, res);
+      }
+    } catch (error) {
+      console.log("任务编发生错误", error);
+      const res = {
+        code: 2,
+        msg: "添加任务错误",
+        path,
+      };
+      send(socket, res);
     }
   }
 };

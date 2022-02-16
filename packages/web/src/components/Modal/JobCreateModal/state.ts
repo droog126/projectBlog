@@ -1,8 +1,12 @@
 import { createState, useState } from '@hookstate/core';
-import { ProjectJobAdd } from '@/events/project';
+import { ProjectJobAdd, ProjectJobEdit } from '@/events/project';
 import { getSearch } from '@/utils/url';
+import Modal from './index';
+import { addModal, removeModal } from '@/utils/modal';
+import { useOutState as useProjectState } from '@/events/project/state';
 
-const state = createState({ visible: false });
+const initState = { visible: false, projectKey: '' };
+const state = createState({ ...initState });
 
 const wrap = (s: any) => {
   return {
@@ -12,9 +16,27 @@ const wrap = (s: any) => {
     set(data) {
       s.merge(data);
     },
-    async tryAddJob(data) {
+    clear() {
+      s.merge(initState);
+      removeModal('createJob');
+    },
+    async tryAddJob() {
       const { key } = getSearch();
-      await ProjectJobAdd({ ...data, key });
+      s.merge({ visible: true, projectKey: key });
+      addModal(Modal, 'createJob');
+    },
+    async ok(data) {
+      const { projectKey } = s.value;
+
+      const { total, jobs } = await ProjectJobAdd({ projectKey, ...data });
+
+      const projectHook = useProjectState();
+      projectHook.set({ jobsIsLoading: false, jobsTotal: total, jobs });
+
+      this.clear();
+    },
+    cancel() {
+      this.clear();
     }
   };
 };

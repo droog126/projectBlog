@@ -14,16 +14,15 @@ export default ({}) => {
   }
   return (
     <Modal
-      // title="进度添加"
       visible={visible}
       okText={'创建'}
       cancelText={'取消'}
       onCancel={() => {
-        modalHook.set({ visible: false });
+        modalHook.cancel();
       }}
       onOk={async () => {
         const data = await form.getFieldsValue();
-        modalHook.tryAddJob(data);
+        modalHook.ok(data);
       }}>
       <div className={styles.container}>
         <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} labelAlign="left">

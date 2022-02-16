@@ -17,6 +17,7 @@ import {
   ProjectGet,
   ProjectJobGet,
   ProjectListGet,
+  ProjectJobEdit,
 } from "@/events/project";
 
 const route: any = {
@@ -73,6 +74,9 @@ const route: any = {
       },
       get: {
         func: ProjectJobGet,
+      },
+      edit: {
+        func: ProjectJobEdit,
       },
     },
   },

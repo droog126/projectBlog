@@ -2,7 +2,6 @@ import { useOutState as useRequestState } from '@/requestState';
 import { useOutState as useGlobalState } from '@/globalState';
 import { useOutState as useCreateModalState } from '@/components/Modal/ProjectCreateModal/state';
 import { useOutState as useProjectState } from './state';
-import project from '@/components/Header/project';
 
 export const ProjectCreate = async (data): Promise<any> => {
   const path = '/project/create';
@@ -54,13 +53,14 @@ export const ProjectListGetCallback = ({ data }) => {
   return data;
 };
 
+// job start
 export const ProjectJobAdd = async (data) => {
   const requestHook = useRequestState();
   return requestHook.give({ path: '/project/job/add', data });
 };
 
 export const ProjectJobAddCallback = ({ data }) => {
-  console.log('项目任务添加成功', data);
+  // console.log('项目任务添加成功', data);
   return data;
 };
 
@@ -70,6 +70,18 @@ export const ProjectJobsGet = async (data) => {
 };
 
 export const ProjectJobsGetCallback = ({ data }) => {
-  console.log('获取项目记录', data);
+  // console.log('获取项目记录', data);
   return data;
 };
+
+export const ProjectJobEdit = async (data) => {
+  const requestHook = useRequestState();
+  return requestHook.give({ path: '/project/job/edit', data });
+};
+
+export const ProjectJobEditCallback = ({ data }) => {
+  // console.log('项目记录编辑', data);
+  return data;
+};
+
+//job end

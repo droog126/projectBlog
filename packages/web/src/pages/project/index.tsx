@@ -9,8 +9,6 @@ import { ProjectGet } from '@/events/project';
 import { useComponentState as useProjectState } from '@/events/project/state';
 import { useComponentState as useProjectCreateModalState } from '@/components/Modal/ProjectCreateModal/state';
 import { Add, EditTwo } from '@icon-park/react';
-import JobCreateModal from '@/components/Modal/JobCreateModal';
-import { useComponentState as useJobCreateModalState } from '@/components/Modal/JobCreateModal/state';
 
 export default () => {
   const projectCreateModalHook = useProjectCreateModalState();
@@ -25,7 +23,6 @@ export default () => {
   const { project, loading, jobsIsLoading, jobs, jobsTotal } = projectState;
   const { key = userInfo.projects[0] || firstKey || '' } = getSearch();
 
-  const JobCreateModalHook = useJobCreateModalState();
   useEffect(() => {
     if (key.includes('project')) {
       globalHook.goTo('/project', { key });
@@ -143,7 +140,7 @@ export default () => {
           开发日志
           <Add
             onClick={() => {
-              JobCreateModalHook.set({ visible: true });
+              projectHook.tryAddProjectJob();
             }}
             theme="two-tone"
             size="36"
@@ -159,17 +156,30 @@ export default () => {
               <div className={styles.dayLogContainer}>
                 <div className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '0 12px' }}>
                   第{jobsTotal - index}天
-                  <EditTwo style={{ cursor: 'pointer', paddingTop: '4px' }} theme="two-tone" size="24" fill={['#333', '#ce5151']} />
+                  {new Date(item.time).toDateString() === new Date().toDateString() ? (
+                    <EditTwo
+                      onClick={() => {
+                        //next todo
+                        projectHook.tryEditProjectJob({ jobIndex: index, content: item.content });
+                      }}
+                      style={{ cursor: 'pointer', paddingTop: '4px' }}
+                      theme="two-tone"
+                      size="24"
+                      fill={['#333', '#ce5151']}
+                    />
+                  ) : null}
                 </div>
                 <div>{item.content}</div>
               </div>
             );
           })
         )}
-        {jobsIsLoading ? null : (
+        {jobsIsLoading || jobsTotal == jobs.length ? (
+          '没有更多了'
+        ) : (
           <div>
             <Button
-              type="text"
+              type="link"
               onClick={() => {
                 projectHook.tryGetProjectJobs({ projectKey: key });
               }}>
@@ -178,7 +188,6 @@ export default () => {
           </div>
         )}
       </div>
-      <JobCreateModal />
     </div>
   );
 };
