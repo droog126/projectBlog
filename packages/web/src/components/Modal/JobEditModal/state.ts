@@ -28,7 +28,7 @@ const wrap = (s: any) => {
     async ok(data) {
       const { jobIndex, projectKey } = s.value;
       const { total, jobs } = await ProjectJobEdit({ jobIndex, projectKey, ...data });
-
+      console.log('new', jobs);
       const projectHook = useProjectState();
       projectHook.set({ jobsIsLoading: false, jobsTotal: total, jobs });
 

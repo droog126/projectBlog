@@ -27,7 +27,7 @@ export const verifyUser = async ({ token, path }, socket) => {
     isValid = isExist;
   }
 
-  return { isValid, userKey, name };
+  return { isValid, userKey, name, userName: name };
 };
 
 export const send = (socket, res) => {

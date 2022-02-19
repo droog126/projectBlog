@@ -25,7 +25,7 @@ export default () => {
 
   // 获取文章
   useEffect(() => {
-    articleHook.getArticle({ key });
+    articleHook.getArticle({ articleKey: key });
     // 常驻bug
   }, [routePath]);
 

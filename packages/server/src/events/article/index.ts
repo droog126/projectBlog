@@ -59,18 +59,79 @@ export const ArticleGet = async (req: any, socket) => {
   const { isValid } = await verifyUser(req, socket);
   if (isValid) {
     const {
-      data: { key },
+      data: { articleKey },
       path,
     } = req;
-    const isExist = await client.exists(key);
-    console.log(isExist, "??", key);
+    const isExist = await client.exists(articleKey);
+    console.log(isExist, "??", articleKey);
     if (isExist) {
-      const article = await client.json.get(key, ".");
+      const article = await client.json.get(articleKey, ".");
 
       const res = { code: 0, msg: "文章获取成功", path, data: { article } };
       send(socket, res);
     } else {
       // 常驻bug
+      const res = { code: 2, msg: "", path, data: {} };
+      send(socket, res);
+    }
+  }
+};
+
+export const ArticleDelete = async (req: any, socket) => {
+  const { isValid, userName, userKey } = await verifyUser(req, socket);
+  if (isValid) {
+    const { data, path } = req;
+    try {
+      console.log("article/delete", data);
+      const { articleKey } = data;
+      const articleAuthor = articleKey.split(":")[1];
+      const isRight = articleAuthor === userName;
+      const isExist = await client.exists(articleKey);
+      console.log("ok?", isRight, isExist);
+      if (isRight && isExist) {
+        await client.del(articleKey);
+        const articleIndex = (await client.json.arrIndex(
+          userKey,
+          ".articles",
+          articleKey
+        )) as number;
+        if (articleIndex >= 0) {
+          await client.json.arrPop(userKey, ".articles", articleIndex);
+          const res = { code: 0, msg: "删除成功", path, data: {} };
+          send(socket, res);
+        }
+      } else {
+        new Error();
+      }
+    } catch (error) {
+      console.log("article/delete", error);
+      const res = { code: 2, msg: "", path, data: {} };
+      send(socket, res);
+    }
+  }
+};
+
+export const ArticleEdit = async (req: any, socket) => {
+  const { isValid, userName } = await verifyUser(req, socket);
+  if (isValid) {
+    const { path, data } = req;
+    try {
+      const {
+        articleKey,
+        new: { title, content },
+      } = data;
+
+      const articleAuthor = articleKey.split(":")[1];
+      const isRight = articleAuthor === userName;
+      const isExist = await client.exists(articleKey);
+      if (isRight && isExist) {
+        await client.json.set(articleKey, ".title", title);
+        await client.json.set(articleKey, ".content", content);
+        const res = { code: 0, msg: "更新成功", path, data: {} };
+        send(socket, res);
+      }
+    } catch (error) {
+      console.log("article/edit", error);
       const res = { code: 2, msg: "", path, data: {} };
       send(socket, res);
     }

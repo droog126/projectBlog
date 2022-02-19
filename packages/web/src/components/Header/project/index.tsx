@@ -11,6 +11,7 @@ import { useComponentState as useProjectModalState } from '@/components/Modal/Pr
 import { useComponentState as useProjectState } from '@/events/project/state';
 import { UserSetFirst } from '@/events/user';
 import { getSearch } from '@/utils/url';
+import modal from 'antd/lib/modal';
 export default () => {
   const globalHook = useGlobalState();
   const { userInfo, curName } = globalHook.get();
@@ -24,6 +25,7 @@ export default () => {
   useEffect(() => {
     projectHook.tryGetProjectList({ userName: curName });
   }, []);
+
   const CurMenu = (
     <Menu>
       {curName === userInfo.name && (
@@ -41,7 +43,20 @@ export default () => {
         }}>
         创建项目
       </Menu.Item>
-      <Menu.Item>删除项目</Menu.Item>
+      <Menu.Item
+        onClick={() => {
+          modal.confirm({
+            title: `你确认要删除- ${project['名字']} -吗?`,
+            onOk: () => {
+              projectHook.tryDeleteProject({});
+            },
+            okText: '确认',
+            cancelText: '取消',
+            maskClosable: true
+          });
+        }}>
+        删除项目
+      </Menu.Item>
       <Menu.Item onClick={UserLogout}>登出</Menu.Item>
     </Menu>
   );

@@ -12,9 +12,9 @@ export const ArticleCreateCallback = ({ data }) => {
   globalHook.goTo(`/blog/article`, { key: articleKey });
 };
 
-export const ArticleGet = async ({ key }) => {
+export const ArticleGet = async ({ articleKey }) => {
   const requestHook = useRequestState();
-  return requestHook.give({ path: '/article/get', data: { key } });
+  return requestHook.give({ path: '/article/get', data: { articleKey } });
 };
 
 export const ArticleGetCallback = ({ data }) => {
@@ -22,6 +22,7 @@ export const ArticleGetCallback = ({ data }) => {
   const { article } = data;
   const articleHook = useArticleState();
   articleHook.pushArticle(article);
+  return data;
 };
 
 export const ArticlesGet = async ({ user }) => {
@@ -34,4 +35,28 @@ export const ArticlesGetCallback = ({ data }) => {
   const { articles } = data;
   const articleHook = useArticleState();
   articleHook.pushArticles(articles);
+};
+
+export const ArticleDelete = async ({ articleKey }) => {
+  const path = '/article/delete';
+  const data = { articleKey };
+  const requestHook = useRequestState();
+  return requestHook.give({ path, data });
+};
+
+export const ArticleDeleteCallback = ({ data }) => {
+  console.log('/article/delete', data);
+  return data;
+};
+
+export const ArticleEdit = async ({ articleKey, new: { title, content } }) => {
+  const path = '/article/edit';
+  const data = { articleKey, new: { title, content } };
+  const requestHook = useRequestState();
+  return requestHook.give({ path, data });
+};
+
+export const ArticleEditCallback = ({ data }) => {
+  console.log('/article/edit', data);
+  return data;
 };

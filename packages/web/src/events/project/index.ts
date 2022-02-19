@@ -46,10 +46,22 @@ export const ProjectListGet = async ({ userName }) => {
 };
 
 export const ProjectListGetCallback = ({ data }) => {
-  // console.log('项目列表获取', data);
+  console.log('project/list/get', data);
   const projectHook = useProjectState();
   projectHook.set({ projectList: data });
 
+  return data;
+};
+
+export const ProjectDelete = async ({ projectKey }) => {
+  const path = '/project/delete';
+  const data = { projectKey };
+  const requestHook = useRequestState();
+  return requestHook.give({ path, data });
+};
+
+export const ProjectDeleteCallback = async ({ data }) => {
+  // 删除成功
   return data;
 };
 
@@ -70,7 +82,7 @@ export const ProjectJobsGet = async (data) => {
 };
 
 export const ProjectJobsGetCallback = ({ data }) => {
-  // console.log('获取项目记录', data);
+  console.log('project/job/get', data);
   return data;
 };
 

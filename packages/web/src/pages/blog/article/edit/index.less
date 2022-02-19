@@ -1,0 +1,43 @@
+.baseContainer{
+  height: calc(100vh - 48px);
+  .title{
+    margin: 0 12px;
+    border:none;
+  }
+
+  .container{
+    height: calc(100% - 100px);
+    position: relative;
+    margin-top: 12px;
+    margin: 0 24px;
+    .left{
+        position: absolute;
+        left: 0;
+        top:0;
+        width: 50%;
+        height:100%;
+        border-right: 2px solid #474744;
+        :global{
+          .CodeMirror {
+            height:100%;
+          }
+        }
+  
+    }
+    .right{
+      position: absolute;
+      left: 50%;
+      top:0;
+      width: 50%;
+      height:100%;
+      background: #28211c;
+      padding: 12px;
+    }
+  }
+  .bottomBar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 12px;
+  }
+}

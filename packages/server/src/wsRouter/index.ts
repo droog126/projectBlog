@@ -4,6 +4,8 @@ import {
   ArticleCreate,
   ArticlesGet,
   ArticleGet,
+  ArticleDelete,
+  ArticleEdit,
 } from "../events/article/index";
 import {
   UserCreate,
@@ -18,6 +20,7 @@ import {
   ProjectJobGet,
   ProjectListGet,
   ProjectJobEdit,
+  ProjectDelete,
 } from "@/events/project";
 
 const route: any = {
@@ -50,6 +53,12 @@ const route: any = {
     get: {
       func: ArticleGet,
     },
+    delete: {
+      func: ArticleDelete,
+    },
+    edit: {
+      func: ArticleEdit,
+    },
   },
   articles: {
     get: {
@@ -59,6 +68,9 @@ const route: any = {
   project: {
     get: {
       func: ProjectGet,
+    },
+    delete: {
+      func: ProjectDelete,
     },
     create: {
       func: ProjectCreate,

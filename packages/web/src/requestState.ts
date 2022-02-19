@@ -1,7 +1,13 @@
 import { createState, useState } from '@hookstate/core';
 import { encode, decode } from '@msgpack/msgpack';
 import { ConnectCallback } from '@/events/connect';
-import { ArticleCreateCallback, ArticleGetCallback, ArticlesGetCallback } from '@/events/article';
+import {
+  ArticleCreateCallback,
+  ArticleDeleteCallback,
+  ArticleEditCallback,
+  ArticleGetCallback,
+  ArticlesGetCallback
+} from '@/events/article';
 import { UserLoginCallback, UserCreateCallback, UserAutoLoginCallback, UserSetFirstCallback } from '@/events/user/callback';
 import {
   ProjectJobAddCallback,
@@ -9,7 +15,8 @@ import {
   ProjectGetCallback,
   ProjectListGetCallback,
   ProjectJobsGetCallback,
-  ProjectJobEditCallback
+  ProjectJobEditCallback,
+  ProjectDeleteCallback
 } from '@/events/project';
 import { message } from 'antd';
 
@@ -38,6 +45,9 @@ const route: any = {
     get: {
       func: ProjectGetCallback
     },
+    delete: {
+      func: ProjectDeleteCallback
+    },
     list: {
       get: {
         func: ProjectListGetCallback
@@ -61,6 +71,12 @@ const route: any = {
     },
     get: {
       func: ArticleGetCallback
+    },
+    delete: {
+      func: ArticleDeleteCallback
+    },
+    edit: {
+      func: ArticleEditCallback
     }
   },
   articles: {

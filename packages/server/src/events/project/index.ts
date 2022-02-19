@@ -50,6 +50,53 @@ export const ProjectGet = async (req: any, socket) => {
   }
 };
 
+export const ProjectDelete = async (req: any, socket) => {
+  const { isValid, userName, userKey } = await verifyUser(req, socket);
+  if (isValid) {
+    const { data, path } = req;
+    try {
+      console.log(userName, "projectDelete", data);
+      const { projectKey } = data;
+      const isExist = await client.exists(projectKey);
+      if (isExist) {
+        const projectAuthor = await client.json.get(projectKey, {
+          path: ".author",
+        });
+        const isRight = projectAuthor === userName;
+        if (isRight) {
+          let result = await client.del(projectKey);
+
+          const projectIndex = (await client.json.arrIndex(
+            userKey,
+            ".projects",
+            projectKey
+          )) as number;
+
+          if (projectIndex >= 0) {
+            let result = await client.json.arrPop(
+              userKey,
+              ".projects",
+              projectIndex
+            );
+            if (result) {
+              const res = { code: 0, msg: "删除成功", path, data: {} };
+              send(socket, res);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.log("任务编发生错误", error);
+      const res = {
+        code: 2,
+        msg: "添加任务错误",
+        path,
+      };
+      send(socket, res);
+    }
+  }
+};
+
 export const ProjectListGet = async (req: any, socket) => {
   const { isValid } = await verifyUser(req, socket);
   if (isValid) {
@@ -144,7 +191,12 @@ export const ProjectAddJob = async (req: any, socket) => {
 
         const isSameDay =
           new Date(firstJob.time).toDateString() === new Date().toDateString();
-
+        console.log(
+          "time",
+          firstJob,
+          new Date(firstJob.time).toDateString(),
+          new Date().toDateString()
+        );
         if (isSameDay) {
           const res = { code: 1, msg: "一天只能记一次", path };
           send(socket, res);

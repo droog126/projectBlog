@@ -30,17 +30,21 @@ export default () => {
     // message.error('没有指定项目');
   }, []);
 
+  const init = async () => {
+    await projectHook.tryGetProject({ projectKey: key });
+    await projectHook.tryGetProjectJobs({ projectKey: key });
+  };
+
   useEffect(() => {
     if (key) {
-      projectHook.tryGetProject({ projectKey: key });
-      projectHook.tryGetProjectJobs({ projectKey: key });
+      init();
     }
     return projectHook.clear();
   }, [routePath]);
 
   if (process.env.DEV) {
     useEffect(() => {
-      // console.log('项目数据中心', projectState);
+      console.log('项目数据中心', projectState);
     }, [projectState]);
   }
 
@@ -82,6 +86,7 @@ export default () => {
       </div>
     );
   }
+
   if (loading) {
     return (
       <div className="center">
@@ -148,10 +153,13 @@ export default () => {
             style={{ cursor: 'pointer', paddingTop: '6px' }}
           />
         </div>
-        {jobsIsLoading ? (
+        {jobsIsLoading && !Boolean(jobs.length) ? (
           <Spin />
         ) : (
           jobs.map((item, index) => {
+            if (!item) {
+              return null;
+            }
             return (
               <div className={styles.dayLogContainer}>
                 <div className={styles.title} style={{ display: 'flex', alignItems: 'center', gap: '0 12px' }}>
@@ -159,7 +167,6 @@ export default () => {
                   {new Date(item.time).toDateString() === new Date().toDateString() ? (
                     <EditTwo
                       onClick={() => {
-                        //next todo
                         projectHook.tryEditProjectJob({ jobIndex: index, content: item.content });
                       }}
                       style={{ cursor: 'pointer', paddingTop: '4px' }}
@@ -169,13 +176,13 @@ export default () => {
                     />
                   ) : null}
                 </div>
-                <div>{item.content}</div>
+                <div style={{ whiteSpace: 'pre-wrap', fontSize: '14px' }}>{item.content}</div>
               </div>
             );
           })
         )}
         {jobsIsLoading || jobsTotal == jobs.length ? (
-          '没有更多了'
+          <div style={{ fontSize: '14px', paddingTop: '8px' }}>没有更多了</div>
         ) : (
           <div>
             <Button

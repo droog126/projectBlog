@@ -5,20 +5,42 @@ import { Dropdown, Menu, Select, Space } from 'antd';
 import { Back, Level, Switch } from '@icon-park/react';
 import { useNavigate } from 'react-router-dom';
 import { useComponentState as useGlobalState } from '@/globalState';
+import { useComponentState as useArticleState } from '@/events/article/state';
 import { UserLogout } from '@/events/user';
+import modal from 'antd/lib/modal';
+import { getSearch } from '@/utils/url';
 const { Option } = Select;
 
 export default () => {
   const globalHook = useGlobalState();
+  const articleHook = useArticleState();
   const { curType, userInfo } = globalHook.get();
   const navigate = useNavigate();
   const headerDom = useRef(null);
 
   const CurMenu = (
     <Menu>
-      <Menu.Item>编辑文章</Menu.Item>
-      <Menu.Item>删除文章</Menu.Item>
-      <Menu.Item>删除项目</Menu.Item>
+      <Menu.Item
+        onClick={() => {
+          const { key } = getSearch();
+          globalHook.goTo('/article/edit', { key: key });
+        }}>
+        编辑文章
+      </Menu.Item>
+      <Menu.Item
+        onClick={() => {
+          modal.confirm({
+            title: '确认删除此文章吗?',
+            okText: '确认',
+            cancelText: '取消',
+            maskClosable: true,
+            onOk: () => {
+              articleHook.tryDeleteArticle({});
+            }
+          });
+        }}>
+        删除文章
+      </Menu.Item>
       <Menu.Item onClick={UserLogout}>登出</Menu.Item>
     </Menu>
   );

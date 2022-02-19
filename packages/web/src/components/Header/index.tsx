@@ -13,10 +13,11 @@ import ArticleHeader from './article';
 
 export default () => {
   const globalHook = useGlobalState();
-  const { curType } = globalHook.get();
+  const { curType, routePath } = globalHook.get();
 
   useEffect(() => {
-    switch (location.pathname) {
+    const path = routePath.split('?')[0];
+    switch (path) {
       case '/blog':
         globalHook.set({ curType: 'blog' });
         break;
@@ -27,7 +28,7 @@ export default () => {
         globalHook.set({ curType: 'article' });
         break;
     }
-  }, []);
+  }, [routePath]);
 
   switch (curType) {
     case 'blog':

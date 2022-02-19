@@ -19,6 +19,7 @@ export default ({}) => {
       cancelText={'取消'}
       onCancel={() => {
         modalHook.cancel();
+        form.resetFields(['content']);
       }}
       onOk={async () => {
         const data = await form.getFieldsValue();
