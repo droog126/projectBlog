@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node-dev -r tsconfig-paths/register  ./src/index --watch ",
     "build": " rimraf ./dist && tsc -r tsconfig-paths/register --declaration",
-    "build:linux":" rm -rf ./dist && tsc -r tsconfig-paths/register --declaration",
+    "build:linux":" rm -rf ./dist && tsc"
   },
   "repository": {
     "type": "git",
