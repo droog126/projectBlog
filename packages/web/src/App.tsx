@@ -9,7 +9,11 @@ export default ({ children }) => {
 
   useEffect(() => {
     if (!connection) {
-      requestHook.connect({});
+      if (process.env.DEV) {
+        requestHook.connect({});
+      } else {
+        requestHook.connect({ ip: '172.22.120.120' });
+      }
     }
 
     // 重定向到登入前的url
