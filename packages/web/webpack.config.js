@@ -3,6 +3,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const friendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin');
+
+const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const { merge } = require('webpack-merge');
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+
 const webpack = require('webpack');
 // const autoCssModulePlugin = require('./plugins/cssAuto');
 
@@ -20,41 +26,9 @@ const devServer = {
   static: path.resolve(__dirname, './out')
 };
 
+const environmentConfig = DEV ? { DEV: true } : { DEV: false };
 
-const environmentConfig = DEV ? { DEV: JSON.stringify(true) } : { DEV: JSON.stringify(false)};
-
-const optimization = {
-  splitChunks: {
-    chunks: 'all',
-    name: 'vendor',
-    cacheGroups: {
-      'echarts.vendor': {
-        name: 'echarts.vendor',
-        priority: 40,
-        test: /[\\/]node_modules[\\/](echarts|zrender)[\\/]/,
-        chunks: 'all'
-      },
-      lodash: {
-        name: 'lodash',
-        chunks: 'async',
-        test: /[\\/]node_modules[\\/]lodash[\\/]/,
-        priority: 40
-      },
-      'async-common': {
-        chunks: 'async',
-        minChunks: 2,
-        name: 'async-commons',
-        priority: 30
-      },
-      commons: {
-        name: 'commons',
-        chunks: 'all',
-        minChunks: 2,
-        priority: 20
-      }
-    }
-  }
-};
+console.log(`环境为:${DEV ? 'dev' : 'pro'}`);
 
 const config = {
   mode: DEV ? 'development' : 'production',
@@ -74,24 +48,7 @@ const config = {
       },
       {
         test: /\.less$/i,
-        exclude: [/node_modules/, path.join(srcPath, 'theme/index.less')],
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[local]_[hash:5]'
-              }
-            }
-          },
-          'postcss-loader',
-          'less-loader'
-        ]
-      },
-      {
-        test: /\.less$/i,
-        include: path.join(srcPath, 'theme/index.less'),
+        include: [/node_modules\\ant/, path.join(srcPath, 'theme/index.less')],
         use: [
           'style-loader',
           'css-loader',
@@ -106,16 +63,33 @@ const config = {
         ]
       },
       {
-        test: /\.tsx?$/,
+        test: /\.less$/i,
+        exclude: [/node_modules/, path.join(srcPath, 'theme/index.less')],
         use: [
+          'style-loader',
           {
-            loader: 'babel-loader',
+            loader: 'css-loader',
             options: {
-              // plugins: [autoCssModulePlugin],
+              modules: {
+                localIdentName: '[local]_[hash:5]'
+              }
             }
           },
-          'ts-loader'
+          'postcss-loader',
+          {
+            loader: 'less-loader',
+            options: {
+              lessOptions: {
+                javascriptEnabled: true
+              }
+            }
+          }
         ]
+      },
+      {
+        test: /\.(tsx|ts)$/i,
+        exclude: /node_modules/,
+        use: ['babel-loader']
       }
     ]
   },
@@ -127,15 +101,21 @@ const config = {
     }
   },
 
-  cache: {
-    type: 'filesystem',
-    buildDependencies: {
-      config: [__filename] // 当构建依赖的config文件（通过 require 依赖）内容发生变化时，缓存失效
-    },
-    name: 'development-cache'
-  },
-
   plugins: [
+    new HtmlWebpackExternalsPlugin({
+      externals: [
+        {
+          module: 'react',
+          entry: 'https://unpkg.com/react@17.0.2/umd/react.production.min.js',
+          global: 'React'
+        },
+        {
+          module: 'react-dom',
+          entry: 'https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js',
+          global: 'ReactDOM'
+        }
+      ]
+    }),
     new HtmlWebpackPlugin({
       title: 'web',
       template: path.resolve(__dirname, 'index.html')
@@ -145,9 +125,6 @@ const config = {
     new SpeedMeasurePlugin(), // 打包时间分析
     new webpack.EnvironmentPlugin(environmentConfig)
   ],
-  devtool: 'inline-source-map',
-  devServer,
-  optimization,
   performance: {
     hints: false,
     maxEntrypointSize: 512000,
@@ -155,4 +132,65 @@ const config = {
   }
 };
 
-module.exports = config;
+let developmentConfig = {
+  devServer,
+  devtool: 'inline-source-map',
+  plugins: []
+};
+
+let productionConfig = {
+  // devtool: 'inline-source-map',
+  cache: {
+    type: 'filesystem',
+    buildDependencies: {
+      config: [__filename]
+    },
+    name: 'development-cache'
+  },
+  // optimization: {
+  //   splitChunks: {
+  //     chunks: 'all',
+  //     name: 'vendor',
+  //     cacheGroups: {
+  //       nodeModule: {
+  //         name: 'nodeModule',
+  //         test: /[\\/]node_modules[\\/]/,
+  //         priority: 10,
+  //         chunks: 'initial'
+  //       },
+  //       'echarts.vendor': {
+  //         name: 'echarts.vendor',
+  //         priority: 40,
+  //         test: /[\\/]node_modules[\\/](echarts|zrender)[\\/]/,
+  //         chunks: 'all'
+  //       },
+  //       lodash: {
+  //         name: 'lodash',
+  //         chunks: 'async',
+  //         test: /[\\/]node_modules[\\/]lodash[\\/]/,
+  //         priority: 40
+  //       },
+  //       async: {
+  //         chunks: 'async',
+  //         minChunks: 2,
+  //         name: 'async',
+  //         priority: 30
+  //       },
+  //       commons: {
+  //         name: 'commons',
+  //         chunks: 'all',
+  //         minChunks: 2,
+  //         priority: 20
+  //       }
+  //     }
+  //   }
+  // },
+  plugins: [
+    new BundleAnalyzerPlugin(),
+    new CompressionWebpackPlugin({
+      test: /\.js(\?.*)?$/i
+    })
+  ]
+};
+
+module.exports = DEV ? merge(config, developmentConfig) : merge(config, productionConfig);
