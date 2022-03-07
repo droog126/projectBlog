@@ -1,5 +1,6 @@
 import { createState, useState } from '@hookstate/core';
 import { encode, decode } from '@msgpack/msgpack';
+import hexToArrayBuffer from 'hex-to-array-buffer';
 import { ConnectCallback } from '@/events/connect';
 import {
   ArticleCreateCallback,
@@ -153,12 +154,19 @@ const wrap = (s) => {
       };
 
       socket.onmessage = (event) => {
-        const rawData = JSON.parse(event.data);
-        const data = decode(rawData.data);
-        if (this.handleCallback(data)) {
-          eventHandler(data, socket);
+        const buffer = hexToArrayBuffer(event.data.slice(2));
+        const obj = decode(buffer);
+        console.log(event.data, buffer, obj);
+
+        if (this.handleCallback(obj)) {
+          eventHandler(obj, socket);
         }
       };
+
+      // const rawSend = socket.send;
+      // socket.send = (req) => {
+      //   rawSend(req);
+      // };
       globalThis.socket = socket;
     },
     async give({ path = '/', data = {}, token = '' }): Promise<any> {

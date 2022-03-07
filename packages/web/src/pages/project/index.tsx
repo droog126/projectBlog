@@ -81,7 +81,7 @@ export default () => {
           onClick={() => {
             projectCreateModalHook.set({ visible: true });
           }}>
-          创建博客
+          创建项目
         </Button>
       </div>
     );

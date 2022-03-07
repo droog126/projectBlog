@@ -1,9 +1,9 @@
-import Data from "@/data";
-import { verifyUser, send } from "@/utils";
-import { uid } from "uid";
-const { encode, decode } = require("msgpack5")();
+import Data from '@/data';
+import { verifyUser, send } from '@/utils';
+import { uid } from 'uid';
+const { encode, decode } = require('msgpack5')();
 const { setData, getData, client } = Data;
-var jwt = require("jsonwebtoken");
+var jwt = require('jsonwebtoken');
 
 export const UserCreate = async (req: any, socket: any) => {
   const { data, path } = req;
@@ -13,12 +13,13 @@ export const UserCreate = async (req: any, socket: any) => {
   // 检测用户是否存在
   const isExist = await client.EXISTS(_key);
   if (isExist) {
-    const res = { code: 1, msg: "用户名重复了", path };
-    socket.send(JSON.stringify(encode(res)));
+    const res = { code: 1, msg: '用户名重复了', path };
+
+    send(socket, res);
     return;
   }
 
-  const token = jwt.sign({ name: name, _time: Date.now() }, "droog126");
+  const token = jwt.sign({ name: name, _time: Date.now() }, 'droog126');
   try {
     const userData = {
       name,
@@ -26,15 +27,15 @@ export const UserCreate = async (req: any, socket: any) => {
       token,
       articles: [],
       projects: [],
-      firstKey: "",
+      firstKey: '',
     };
-    await client.json.set(_key, ".", userData);
+    await client.json.set(_key, '.', userData);
 
     delete userData.psw;
-    const res = { code: 0, msg: "创建成功了", path, data: userData };
-    socket.send(JSON.stringify(encode(res)));
+    const res = { code: 0, msg: '创建成功了', path, data: userData };
+    send(socket, res);
   } catch (e: any) {
-    console.log(e, "hello", e.message);
+    console.log(e, 'hello', e.message);
   }
 };
 
@@ -46,8 +47,8 @@ export const UserLogin = async (req: any, socket: any) => {
   // 检测用户是否存在
   const isExist = await client.EXISTS(_key);
   if (!isExist) {
-    const res = { code: 1, msg: "用户还没有注册，你点创建吧...", path };
-    socket.send(JSON.stringify(encode(res)));
+    const res = { code: 1, msg: '用户还没有注册，你点创建吧...', path };
+    send(socket, res);
     return;
   }
 
@@ -57,42 +58,42 @@ export const UserLogin = async (req: any, socket: any) => {
     // 更新token
     let deToken = { _time: 0 };
     try {
-      deToken = jwt.verify(userData.token, "droog126") || 0;
+      deToken = jwt.verify(userData.token, 'droog126') || 0;
     } catch (e) {
-      console.log("登录有bug", e);
+      console.log('登录有bug', e);
     }
     if (Date.now() - deToken._time < 7879680000) {
       const res = {
         code: 0,
-        msg: "登入成功!",
+        msg: '登入成功!',
         path,
         token: userData.token,
         data: userData,
       };
 
       delete userData.psw;
-      socket.send(JSON.stringify(encode(res)));
+      send(socket, res);
     } else {
       delete userData.psw;
-      const newToken = jwt.sign({ name: name, _time: Date.now() }, "droog126");
-      client.json.set(_key, ".token", newToken);
+      const newToken = jwt.sign({ name: name, _time: Date.now() }, 'droog126');
+      client.json.set(_key, '.token', newToken);
 
       const res = {
         code: 0,
-        msg: "登入成功!",
+        msg: '登入成功!',
         path,
         token: newToken,
         data: userData,
       };
 
       delete userData.psw;
-      socket.send(JSON.stringify(encode(res)));
+      send(socket, res);
     }
 
     return;
   } else {
-    const res = { code: 1, msg: "密码错误...", path };
-    socket.send(JSON.stringify(encode(res)));
+    const res = { code: 1, msg: '密码错误...', path };
+    send(socket, res);
     return;
   }
 };
@@ -104,7 +105,7 @@ export const UserAutoLogin = async (req: any, socket: any) => {
   let isExist = 1;
 
   try {
-    deToken = jwt.verify(token, "droog126");
+    deToken = jwt.verify(token, 'droog126');
     isValid = Date.now() - deToken._time < 7879680000;
   } catch (e) {
     isValid = false;
@@ -118,17 +119,17 @@ export const UserAutoLogin = async (req: any, socket: any) => {
       const userData: any = await client.json.get(_key);
 
       delete userData.psw;
-      const res = { code: 0, msg: "自动登入成功!", path, data: userData };
-      socket.send(JSON.stringify(encode(res)));
+      const res = { code: 0, msg: '自动登入成功!', path, data: userData };
+      send(socket, res);
       return;
     } else {
-      const res = { code: 2, msg: "用户不存在!", path };
-      socket.send(JSON.stringify(encode(res)));
+      const res = { code: 2, msg: '用户不存在!', path };
+      send(socket, res);
       return;
     }
   } else {
-    const res = { code: 2, msg: "token无效!", path };
-    socket.send(JSON.stringify(encode(res)));
+    const res = { code: 2, msg: 'token无效!', path };
+    send(socket, res);
     return;
   }
 };
@@ -141,17 +142,17 @@ export const UserSetFirst = async (req: any, socket: any) => {
       path,
     } = req;
     try {
-      await client.json.set(userKey, ".firstKey", key);
+      await client.json.set(userKey, '.firstKey', key);
 
       const res = {
         code: 0,
-        msg: "设置首页成功",
+        msg: '设置首页成功',
         path,
         data: { firstKey: key },
       };
-      socket.send(JSON.stringify(encode(res)));
+      send(socket, res);
     } catch (error) {
-      console.log("userSetFirst", error);
+      console.log('userSetFirst', error);
     }
   }
 };
