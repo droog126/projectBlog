@@ -1,18 +1,18 @@
-import { Connect } from "../events";
-import CountPv from "../events/count/pv";
+import { Connect } from '../events';
+import CountPv from '../events/count/pv';
 import {
   ArticleCreate,
   ArticlesGet,
   ArticleGet,
   ArticleDelete,
   ArticleEdit,
-} from "../events/article/index";
+} from '../events/article/index';
 import {
   UserCreate,
   UserLogin,
   UserAutoLogin,
   UserSetFirst,
-} from "@/events/user";
+} from '@/events/user';
 import {
   ProjectAddJob,
   ProjectCreate,
@@ -21,7 +21,7 @@ import {
   ProjectListGet,
   ProjectJobEdit,
   ProjectDelete,
-} from "@/events/project";
+} from '@/events/project';
 
 const route: any = {
   connect: {
@@ -97,7 +97,7 @@ const route: any = {
 export const router = (data: any, socket: any) => {
   const { path } = data;
   try {
-    const paths = path.split("/").slice(1);
+    const paths = path.split('/').slice(1);
     let target = route;
     let len = paths.length;
     let i;
@@ -115,6 +115,6 @@ export const router = (data: any, socket: any) => {
       target.func(data, socket);
     }
   } catch (e) {
-    console.log("没找到路由", e);
+    console.log('没找到路由', e);
   }
 };

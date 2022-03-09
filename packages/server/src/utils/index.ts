@@ -1,5 +1,8 @@
-const { encode, decode } = require('msgpack5')();
 var jwt = require('jsonwebtoken');
+
+import * as msgpack from '@/res/msgpack5.min.js';
+const { decode, encode } = msgpack();
+
 import Data from '@/data';
 const { client } = Data;
 

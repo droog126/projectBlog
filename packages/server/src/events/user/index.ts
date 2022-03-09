@@ -1,7 +1,6 @@
 import Data from '@/data';
 import { verifyUser, send } from '@/utils';
-import { uid } from 'uid';
-const { encode, decode } = require('msgpack5')();
+
 const { setData, getData, client } = Data;
 var jwt = require('jsonwebtoken');
 

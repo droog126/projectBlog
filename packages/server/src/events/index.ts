@@ -1,4 +1,3 @@
-const { encode, decode } = require('msgpack5')();
 import { send } from '@/utils';
 
 export const Connect = (data: any, socket: any) => {

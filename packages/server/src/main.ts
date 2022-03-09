@@ -8,7 +8,9 @@
 // bootstrap();
 
 import { App, SHARED_COMPRESSOR } from '@/res/uWebSockets.js';
-const { decode } = require('msgpack5')();
+import * as msgpack from '@/res/msgpack5.min.js';
+const { decode } = msgpack();
+
 import { router } from '@/wsRouter';
 
 const port = 9001;

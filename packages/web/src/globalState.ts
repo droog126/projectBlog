@@ -43,5 +43,3 @@ export const useOutState = () => wrap(state);
 export const useComponentState = () => {
   return wrap(useState(state));
 };
-
-export const tryPromise = () => {};

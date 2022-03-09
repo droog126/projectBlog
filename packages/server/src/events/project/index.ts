@@ -177,8 +177,38 @@ export const ProjectAddJob = async (req: any, socket) => {
     const jobsKey = `${projectKey}:jobs`;
 
     const isExist = await client.exists(jobsKey);
+    const jobsLen = await client.json.arrLen(jobsKey, '.');
+    const isEmpty = jobsLen === 0;
+    if (isEmpty) {
+      await client.json.arrInsert(jobsKey, '.', 0, {
+        content,
+        time: Date.now(),
+      });
 
-    if (isExist) {
+      const jobLen = await client.json.arrLen(jobsKey, '.');
+      const jobList: any[] = [];
+      for (let i = index; i < jobLen; i++) {
+        if (i == index + 10) {
+          break;
+        }
+        let curJob = await client.json.get(jobsKey, {
+          path: `.[${i}]`,
+        });
+        jobList.push(curJob);
+      }
+
+      const res = {
+        code: 0,
+        msg: '记录添加成功',
+        path,
+        data: {
+          total: jobLen,
+          jobs: jobList,
+        },
+      };
+      send(socket, res);
+      return;
+    } else if (isExist) {
       try {
         const firstJob = (await client.json.get(jobsKey, {
           path: '.[0]',
@@ -186,12 +216,14 @@ export const ProjectAddJob = async (req: any, socket) => {
 
         const isSameDay =
           new Date(firstJob.time).toDateString() === new Date().toDateString();
+
         console.log(
           'time',
           firstJob,
           new Date(firstJob.time).toDateString(),
           new Date().toDateString(),
         );
+
         if (isSameDay) {
           const res = { code: 1, msg: '一天只能记一次', path };
           send(socket, res);
@@ -201,6 +233,7 @@ export const ProjectAddJob = async (req: any, socket) => {
             content,
             time: Date.now(),
           });
+
           const jobLen = await client.json.arrLen(jobsKey, '.');
           const jobList: any[] = [];
           for (let i = index; i < jobLen; i++) {

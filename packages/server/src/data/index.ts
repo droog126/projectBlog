@@ -1,8 +1,10 @@
-import { createClient } from "redis";
+import { createClient } from 'redis';
 
-const client = createClient();
+const client = createClient({
+  url: 'redis://:a1212126000@118.178.191.183:6379',
+});
 client.connect().then(() => {
-  console.log("data ok");
+  console.log('data ok');
 });
 // client.subscribe("updateUser", (e) => {
 //   console.log("hello");
@@ -10,8 +12,8 @@ client.connect().then(() => {
 // client.publish("updateUser", "fuck you ");
 
 async function setData({
-  key = "root",
-  path = "",
+  key = 'root',
+  path = '',
   data,
 }: {
   key: any;
@@ -19,7 +21,7 @@ async function setData({
   data: any;
 }): Promise<any> {
   const res = await client.exists(key, path);
-  console.log("setData", key, path, res);
+  console.log('setData', key, path, res);
 
   if (res) {
     const value = await client.json.get(key, { path });
@@ -32,14 +34,14 @@ async function setData({
 }
 
 async function getData({
-  key = "root",
-  path = ".",
+  key = 'root',
+  path = '.',
 }: {
   key: any;
   path: any;
 }): Promise<any> {
   const res = await client.exists(key, path);
-  console.log("getData", key, path, res);
+  console.log('getData', key, path, res);
   if (res) {
     const value = await client.json.get(key, { path });
     return value;

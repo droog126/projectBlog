@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './index.less';
 import { Button, Form, Input } from 'antd';
 import { UserCreate, UserLogin } from '@/events/user';
+import { useComponentState as useGlobalState } from '@/globalState';
 export default () => {
   const [form] = Form.useForm();
+  const globalHook = useGlobalState();
+  const { userInfo } = globalHook.get();
+
+  useEffect(() => {
+    if (Object.keys(userInfo).length) {
+      globalHook.goTo('/home');
+    }
+  }, [userInfo]);
   return (
     <div className={styles.container}>
       <div className={styles.accountForm}>
