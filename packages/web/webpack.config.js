@@ -147,44 +147,6 @@ let productionConfig = {
     },
     name: 'development-cache'
   },
-  // optimization: {
-  //   splitChunks: {
-  //     chunks: 'all',
-  //     name: 'vendor',
-  //     cacheGroups: {
-  //       nodeModule: {
-  //         name: 'nodeModule',
-  //         test: /[\\/]node_modules[\\/]/,
-  //         priority: 10,
-  //         chunks: 'initial'
-  //       },
-  //       'echarts.vendor': {
-  //         name: 'echarts.vendor',
-  //         priority: 40,
-  //         test: /[\\/]node_modules[\\/](echarts|zrender)[\\/]/,
-  //         chunks: 'all'
-  //       },
-  //       lodash: {
-  //         name: 'lodash',
-  //         chunks: 'async',
-  //         test: /[\\/]node_modules[\\/]lodash[\\/]/,
-  //         priority: 40
-  //       },
-  //       async: {
-  //         chunks: 'async',
-  //         minChunks: 2,
-  //         name: 'async',
-  //         priority: 30
-  //       },
-  //       commons: {
-  //         name: 'commons',
-  //         chunks: 'all',
-  //         minChunks: 2,
-  //         priority: 20
-  //       }
-  //     }
-  //   }
-  // },
   plugins: [
     new BundleAnalyzerPlugin(),
     new CompressionWebpackPlugin({
