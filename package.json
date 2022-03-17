@@ -14,7 +14,8 @@
   "scripts": {
     "server": "lerna exec --scope server yarn dev",
     "web": "lerna exec --scope web -- yarn dev",
-    "dev": "concurrently \"yarn server\" \"yarn web\"  "
+    "dev": "concurrently \"yarn server\" \"yarn web\"  ",
+    "build": "concurrently \"lerna exec --scope server yarn build\" \"lerna exec --scope web yarn build\"  "
   },
   "version": "0.0.0"
 }
